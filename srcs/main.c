@@ -2,9 +2,9 @@
 
 int	main(void)
 {
-	char *line;
-	char **splited_lines;
-	int	i;
+	char	*line;
+	char	**splited_lines;
+	int		i;
 
 	write(1, "minishell > ", 12);
 	while (get_next_line(0, &line) == 1)

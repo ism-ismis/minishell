@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:54:08 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/01/10 22:43:24 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/05/24 05:17:09 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	ft_len_join(char const *s1, char const *s2)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	if (s1)
@@ -30,8 +30,8 @@ static int	ft_len_join(char const *s1, char const *s2)
 
 static char	*insert(char *ss, char const *s1, char const *s2)
 {
-	int index;
-	int i;
+	int	index;
+	int	i;
 
 	index = 0;
 	i = 0;
@@ -46,7 +46,7 @@ static char	*insert(char *ss, char const *s1, char const *s2)
 	return (ss);
 }
 
-char		*stradd(char *s1, char *s2)
+char	*stradd(char *s1, char *s2)
 {
 	int		len;
 	char	*ss;
@@ -57,33 +57,36 @@ char		*stradd(char *s1, char *s2)
 	if (s2)
 		while (s2[len])
 			len++;
-	if (!(ss = (char *)malloc((len + 1) * sizeof(char))))
+	ss = (char *)malloc((len + 1) * sizeof(char));
+	if (!ss)
 		return (NULL);
 	ss = insert(ss, s1, s2);
 	return (s1);
 }
 
-char		*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ss;
 	int		len;
 
 	len = 10;
 	len = ft_len_join(s1, s2);
-	if (!(ss = (char *)malloc((len + 1) * sizeof(char))))
+	ss = (char *)malloc((len + 1) * sizeof(char));
+	if (!ss)
 		return (NULL);
 	ss = insert(ss, s1, s2);
 	return (ss);
 }
 
-char		*ft_strldup(const char *src, long len)
+char	*ft_strldup(const char *src, long len)
 {
 	char	*cpy;
 	long	i;
 
 	if (!src)
 		return (NULL);
-	if (!(cpy = (char *)malloc((len + 1) * sizeof(char))))
+	cpy = (char *)malloc((len + 1) * sizeof(char));
+	if (!cpy)
 		return (NULL);
 	i = 0;
 	while (i < len)
