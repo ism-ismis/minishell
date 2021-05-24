@@ -10,12 +10,12 @@ int	main(void)
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
-		if (!ft_strcmp(line, "exit"))
-			exit(0);
 		i = 0;
 		while (splited_lines[i])
 		{
 			printf("%d %s\n", i, splited_lines[i]);
+			if (!ft_strcmp(splited_lines[i], "exit"))
+				exit(0);
 			i++;
 		}
 		free(line);

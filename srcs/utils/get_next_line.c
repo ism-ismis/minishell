@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 19:40:04 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/24 19:54:16 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/05/24 20:59:15 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	get_next_buf(int fd, char **line, char **stat)
 	j = 0;
 	while (*stat && (*stat)[j] != '\0' && (*stat)[j] != '\n')
 		j++;
-	add(line, stat, j);
+	add(line, stat, j - 1);
 	if (*stat && (*stat)[j] == '\n' && is_closed_correctly(line))
 	{
 		s = *stat;

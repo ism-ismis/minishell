@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:54:08 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/24 19:53:42 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/05/24 20:58:20 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 int	handle_odd_quote(char **line, int i, int quote_type)
 {
-	(*line)[i] = '\n';
 	if (quote_type == QUOTE)
 		write(1, "quote> ", 7);
 	else if (quote_type == DQUOTE)
@@ -37,7 +36,7 @@ static char	*insert(char *ss, char const *s1, char const *s2, int len)
 	if (s2)
 		while (s2[i] && i < len)
 			ss[index++] = s2[i++];
-	ss[index - 1] = '\0';
+	ss[index] = '\0';
 	return (ss);
 }
 
