@@ -6,29 +6,24 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:54:08 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/24 05:17:09 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:53:42 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "get_next_line.h"
+#include "minishell.h"
 
-static int	ft_len_join(char const *s1, char const *s2)
+int	handle_odd_quote(char **line, int i, int quote_type)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	if (s1)
-		while (s1[i])
-			i++;
-	j = 0;
-	if (s2)
-		while (s2[j])
-			j++;
-	return (i + j);
+	(*line)[i] = '\n';
+	if (quote_type == QUOTE)
+		write(1, "quote> ", 7);
+	else if (quote_type == DQUOTE)
+		write(1, "dquote> ", 8);
+	return (0);
 }
 
-static char	*insert(char *ss, char const *s1, char const *s2)
+static char	*insert(char *ss, char const *s1, char const *s2, int len)
 {
 	int	index;
 	int	i;
@@ -40,9 +35,9 @@ static char	*insert(char *ss, char const *s1, char const *s2)
 			ss[index++] = s1[i++];
 	i = 0;
 	if (s2)
-		while (s2[i])
+		while (s2[i] && i < len)
 			ss[index++] = s2[i++];
-	ss[index] = '\0';
+	ss[index - 1] = '\0';
 	return (ss);
 }
 
@@ -60,21 +55,19 @@ char	*stradd(char *s1, char *s2)
 	ss = (char *)malloc((len + 1) * sizeof(char));
 	if (!ss)
 		return (NULL);
-	ss = insert(ss, s1, s2);
+	ss = insert(ss, s1, s2, ft_strlen(s2));
 	return (s1);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strljoin(char const *s1, char const *s2, int len)
 {
 	char	*ss;
-	int		len;
 
-	len = 10;
-	len = ft_len_join(s1, s2);
+	len += ft_strlen(s1);
 	ss = (char *)malloc((len + 1) * sizeof(char));
 	if (!ss)
 		return (NULL);
-	ss = insert(ss, s1, s2);
+	ss = insert(ss, s1, s2, ft_strlen(s2));
 	return (ss);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 00:58:32 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/24 05:41:09 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:52:44 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,14 @@
 # include <sys/stat.h>
 # include <limits.h>
 # define BUFFER_SIZE 10
+# define QUOTE 1
+# define DQUOTE 2
 
-int			get_next_line(int fd, char **line);
-char		*ft_strjoin(char const *s1, char const *s2);
+int			minishell_get_next_line(int fd, char **line);
+char		*ft_strljoin(char const *s1, char const *s2, int len);
 char		*ft_strldup(const char *src, long len);
 char		*stradd(char *s1, char *s2);
 void		ft_bzero(void *s, size_t n);
+int			handle_odd_quote(char **line, int i, int quote_type);
 
 #endif

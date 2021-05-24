@@ -7,7 +7,7 @@ int	main(void)
 	int		i;
 
 	write(1, "minishell > ", 12);
-	while (get_next_line(0, &line) == 1)
+	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
 		if (!ft_strcmp(line, "exit"))

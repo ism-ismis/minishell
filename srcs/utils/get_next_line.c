@@ -6,19 +6,18 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 19:40:04 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/24 05:38:21 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:54:16 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "minishell.h"
 
 void	add(char **line, char **stat, int len)
 {
 	char	*tmp;
 
-	if (*stat)
-		(*stat)[len] = '\0';
-	tmp = ft_strjoin(*line, *stat);
+	tmp = ft_strljoin(*line, *stat, len);
 	if (*line)
 		free(*line);
 	*line = tmp;
@@ -46,6 +45,31 @@ int	read_next_buf(int fd, char **line, char **stat)
 	return (-3);
 }
 
+int	is_closed_correctly(char **line)
+{
+	int	i;
+
+	i = -1;
+	while ((*line)[++i])
+	{
+		if ((*line)[i] == '"')
+		{
+			while ((*line)[++i] && (*line)[i] != '"')
+				;
+			if (!(*line)[i])
+				return (handle_odd_quote(line, i, DQUOTE));
+		}
+		else if ((*line)[i] == '\'')
+		{
+			while ((*line)[++i] && (*line)[i] != '\'')
+				;
+			if (!(*line)[i])
+				return (handle_odd_quote(line, i, QUOTE));
+		}
+	}
+	return (1);
+}
+
 int	get_next_buf(int fd, char **line, char **stat)
 {
 	char	*s;
@@ -54,9 +78,9 @@ int	get_next_buf(int fd, char **line, char **stat)
 	j = 0;
 	while (*stat && (*stat)[j] != '\0' && (*stat)[j] != '\n')
 		j++;
-	if (*stat && (*stat)[j] == '\n')
+	add(line, stat, j);
+	if (*stat && (*stat)[j] == '\n' && is_closed_correctly(line))
 	{
-		add(line, stat, j);
 		s = *stat;
 		*stat = ft_strjoin(*stat + j + 1, NULL);
 		free(s);
@@ -64,17 +88,16 @@ int	get_next_buf(int fd, char **line, char **stat)
 			return (-2);
 		return (-3);
 	}
-	add(line, stat, j);
 	return (read_next_buf(fd, line, stat));
 }
 
-int	get_next_line(int fd, char **line)
+int	minishell_get_next_line(int fd, char **line)
 {
 	int			j;
 	static char	*stat;
 
 	if (line)
-		*line = ft_strjoin(NULL, "");
+		*line = ft_strdup("");
 	if (!line || !*line || BUFFER_SIZE <= 0 || INT_MAX - 1 <= BUFFER_SIZE)
 		return (-1);
 	while (1)
