@@ -1,10 +1,12 @@
 #include "minishell.h"
+#include "parser.h"
 
 int	main(void)
 {
 	char	*line;
 	char	**splited_lines;
 	int		i;
+	t_node	*node;
 
 	write(1, "minishell > ", 12);
 	while (minishell_get_next_line(0, &line) == 1)
@@ -19,6 +21,7 @@ int	main(void)
 			i++;
 		}
 		free(line);
+		node = semicolon_node_creator(&splited_lines);
 		write(1, "minishell > ", 12);
 	}
 	return (0);
