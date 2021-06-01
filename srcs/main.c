@@ -1,23 +1,29 @@
 #include "minishell.h"
+#include "parser.h"
 
 int	main(void)
 {
 	char		*line;
 	t_str_list	*splited_lines;
+	t_str_list	*tmp;
+	int		i;
+	t_node	*node;
 
 	write(1, "minishell > ", 12);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
 		var_expansion(splited_lines);
-		while (splited_lines)
+		tmp = splited_lines;
+		while (tmp)
 		{
-			printf("%s\n", splited_lines->s);
-			if (!ft_strcmp(splited_lines->s, "exit"))
+			printf("%s\n", tmp->s);
+			if (!ft_strcmp(tmp->s, "exit"))
 				exit(0);
-			splited_lines = splited_lines->next;
+			tmp = tmp->next;
 		}
 		free(line);
+		node = semicolon_node_creator(splited_lines);
 		write(1, "minishell > ", 12);
 	}
 	return (0);

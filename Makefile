@@ -4,7 +4,12 @@ CFLAGS	= -I ./includes/
 LIBFT	= srcs/libft/libft.a
 LIBFTDIR	= srcs/libft/
 SRCDIR	= srcs/
-SRCNAME	= main.c split.c expansion.c utils/get_next_line.c utils/get_next_line_utils.c
+SRCNAME	= main.c \
+			split.c \
+			utils/get_next_line.c \
+			utils/get_next_line_utils.c \
+			parser/parser.c \
+			expansion.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 
