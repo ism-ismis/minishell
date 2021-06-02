@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:54:08 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/29 13:52:30 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/02 11:19:04 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ char	*ft_strldup(const char *src, long len)
 	long	i;
 
 	if (!src)
-		return (NULL);
+	{
+		return (ft_strdup(""));
+	}
 	cpy = (char *)malloc((len + 1) * sizeof(char));
 	if (!cpy)
 		return (NULL);

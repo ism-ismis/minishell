@@ -43,7 +43,7 @@ t_str_list	*get_next_word(char **line, t_str_list *splited_lines)
 	}
 	*line += i;
 	i = 1;
-	if (*line && !ft_isspace(**line))
+	if (*line && **line && !ft_isspace(**line))
 	{
 		if (!ft_strncmp(*line, ">>", 2))
 			i++;

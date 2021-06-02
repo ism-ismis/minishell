@@ -15,6 +15,7 @@ int			minishell_get_next_line(int fd, char **line);
 t_str_list	*shell_split(char *line);
 int			is_separator(char c);
 t_str_list	*var_expansion(t_str_list *splited_lines);
+char		*remove_quotations(char *s);
 char		*ft_strldup(const char *src, long len);
 
 #endif

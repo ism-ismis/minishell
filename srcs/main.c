@@ -13,7 +13,7 @@ int	main(void)
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
-		var_expansion(splited_lines);
+		splited_lines = var_expansion(splited_lines);
 		tmp = splited_lines;
 		while (tmp)
 		{
@@ -23,7 +23,7 @@ int	main(void)
 			tmp = tmp->next;
 		}
 		free(line);
-		node = semicolon_node_creator(splited_lines);
+		node = semicolon_node_creator(&splited_lines);
 		write(1, "minishell > ", 12);
 	}
 	return (0);
