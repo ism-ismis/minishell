@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/04 06:29:42 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/24 03:27:27 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/02 14:13:17 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,18 @@ char	*ft_strtrim(char const *s1, char const *set)
 	while (start <= end)
 		cpy[i++] = s1[start++];
 	cpy[i] = '\0';
+	return (cpy);
+}
+
+char	*ft_strltrim(char const *s1, size_t l)
+{
+	char	*cpy;
+	char	*s2;
+
+	if (!s1)
+		return (NULL);
+	s2 = malloc((l + 2) * sizeof(char));
+	ft_strlcpy(s2, s1, l + 1);
+	cpy = ft_strjoin(s2, s1 + l + 1);
 	return (cpy);
 }

@@ -41,6 +41,6 @@ typedef struct s_node
 	char			*cm_content;
 }		t_node;
 
-t_node	*semicolon_node_creator(char ***token_list);
+t_node	*semicolon_node_creator(t_str_list **token_list);
 
 #endif

@@ -8,7 +8,8 @@ SRCNAME	= main.c \
 			split.c \
 			utils/get_next_line.c \
 			utils/get_next_line_utils.c \
-			parser/parser.c
+			parser/parser.c \
+			expansion.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 

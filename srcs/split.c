@@ -1,12 +1,16 @@
 #include "minishell.h"
 
+int	is_separator(char c)
+{
+	return (ft_isspace(c) || c == ';' || c == '|' || c == '>' || c == '<');
+}
+
 int	find_separator(char *line)
 {
 	int	i;
 
 	i = 0;
-	while (line[i] && !ft_isspace(line[i]) && line[i] != ';'
-		&& line[i] != '|' && line[i] != '>' && line[i] != '<')
+	while (line[i] && !ft_isspace(line[i]) && !is_separator(line[i]))
 	{
 		if (line[i] == '"')
 		{
@@ -26,55 +30,44 @@ int	find_separator(char *line)
 	return (i);
 }
 
-int	count(char *line)
+t_str_list	*get_next_word(char **line, t_str_list *splited_lines)
 {
 	int	i;
-	int	len;
 
-	i = 0;
-	while (*line)
+	i = find_separator(*line);
+	if (i)
 	{
-		len = find_separator(line);
-		if (len)
-			i++;
-		line += len;
-		len = 1;
-		if (*line && !ft_isspace(*line))
-		{
-			if (!ft_strncmp(line, ">>", 2))
-				len = 2;
-			i++;
-		}
-		if (*line)
-			line += len;
+		splited_lines->next = malloc(sizeof(t_str_list));
+		splited_lines = splited_lines->next;
+		splited_lines->s = ft_strldup(*line, i);
 	}
-	return (i);
+	*line += i;
+	i = 1;
+	if (*line && **line && !ft_isspace(**line))
+	{
+		if (!ft_strncmp(*line, ">>", 2))
+			i++;
+		splited_lines->next = malloc(sizeof(t_str_list));
+		splited_lines = splited_lines->next;
+		splited_lines->s = ft_strldup(*line, i);
+	}
+	if (**line)
+		*line += i;
+	return (splited_lines);
 }
 
-char	**shell_split(char *line)
+t_str_list	*shell_split(char *line)
 {
-	char	**splited_lines;
-	int		i;
-	int		len;
+	t_str_list	*splited_lines;
+	t_str_list	*start;
+	int			len;
 
-	splited_lines = (char **)malloc((count(line) + 1) * sizeof(char *));
-	i = 0;
+	splited_lines = malloc(sizeof(t_str_list));
+	start = splited_lines;
 	while (*line)
-	{
-		len = find_separator(line);
-		if (len)
-			splited_lines[i++] = ft_strldup(line, len);
-		line += len;
-		len = 1;
-		if (*line && !ft_isspace(*line))
-		{
-			if (!ft_strncmp(line, ">>", 2))
-				len++;
-			splited_lines[i++] = ft_strldup(line, len);
-		}
-		if (*line)
-			line += len;
-	}
-	splited_lines[i] = NULL;
+		splited_lines = get_next_word(&line, splited_lines);
+	splited_lines->next = NULL;
+	splited_lines = start->next;
+	free(start);
 	return (splited_lines);
 }
