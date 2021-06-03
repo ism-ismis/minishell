@@ -1,7 +1,33 @@
 #include "minishell.h"
 #include "parser.h"
 
-int	main(void)
+
+int	launch_minishell(t_node *node)
+{
+	pid_t	pid;
+	pid_t	wpid;
+	int		status;
+	extern char **environ;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		print_node(node);
+		if (execve(node->cm_content, node->tokens, NULL) == -1)
+			perror("launch_minishell");
+	}
+	else if (pid < 0)
+		perror("launch_minishell");
+	else
+	{
+		wpid = waitpid(pid, &status, WUNTRACED);
+		while (!WIFEXITED(status) && !WIFSIGNALED(status))
+			wpid = waitpid(pid, &status, WUNTRACED);
+	}
+	return (1);
+}
+
+int	main(int ac, char **av, char **envp)
 {
 	char		*line;
 	t_str_list	*splited_lines;
@@ -24,6 +50,8 @@ int	main(void)
 		}
 		free(line);
 		node = semicolon_node_creator(&splited_lines);
+		if (node->cm_kind == OTHER)
+			launch_minishell(node);
 		write(1, "minishell > ", 12);
 	}
 	return (0);

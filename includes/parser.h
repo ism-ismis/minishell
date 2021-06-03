@@ -37,10 +37,13 @@ typedef struct s_node
 	t_command_kind	cm_kind;
 	struct s_node	*lhs;
 	struct s_node	*rhs;
-	t_token			*tokens;
+	char			**tokens;
+	char			*redirect_info;
 	char			*cm_content;
 }		t_node;
 
 t_node	*semicolon_node_creator(t_str_list **token_list);
+
+void	print_node(t_node *node);
 
 #endif
