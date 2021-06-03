@@ -1,15 +1,18 @@
 #include "parser.h"
 
-void	print_tokens(t_token *tokens)
-{
-	t_token *ptr;
 
+void	print_tokens(char **tokens)
+{
+	int	i;
+	char **ptr;
+
+	i = 0;
 	ptr = tokens;
-	printf("node_tokens: ");
-	while (ptr)
+	printf("node_tokens:\n");
+	while(ptr[i])
 	{
-		printf("%s ", ptr->str);
-		ptr = ptr->next;
+		printf("[%d]:%s ", i, ptr[i]);
+		i++;
 	}
 	printf("\n");
 }
@@ -43,6 +46,8 @@ void	print_node_command(t_node *node)
 		print_tokens(node->tokens);
 	else
 		printf("node_tokens: NULL\n");
+	if (node->redirect_info)
+		printf("redirect_info:%s\n", node->redirect_info);
 }
 
 void	print_node(t_node *node)
@@ -63,7 +68,6 @@ void	print_node(t_node *node)
 			printf("node_lhs:NULL\n");
 		if (node->rhs)
 		{
-			// printf("rhs!!!\n");
 			printf("node_rhs:%d\n", node->rhs->nd_kind);
 			if (node->rhs->nd_kind == 1)
 				print_node_command(node->rhs);
@@ -78,7 +82,7 @@ t_node	*new_node(t_node_kind nd_kind, t_node *lhs, t_node *rhs)
 {
 	t_node *node;
 
-	printf("let's make new node!\n");
+	printf("let's make a new node!\n");
 	node = ft_calloc(1, sizeof(t_node));
 	node->nd_kind = nd_kind;
 	node->lhs = lhs;
@@ -86,31 +90,99 @@ t_node	*new_node(t_node_kind nd_kind, t_node *lhs, t_node *rhs)
 	return (node);
 }
 
-void	define_tokens(t_str_list **token_list, t_node *node)
+int		define_token_size(t_str_list *list)
 {
-	t_token *new_token;
-	t_token *last;
+	int	len;
+	t_str_list	*ptr;
 
-	printf("enter define_tokens!\n");
-	//printf("first token:%s\n", (*token_list)->s);
-	while (*token_list && *((*token_list)->s) != ';' && *((*token_list)->s) != '|')
+	ptr = list;
+	if (!ptr)
+		return (0);
+	len = 1;
+	while (ptr->next != NULL)
 	{
-		new_token = ft_calloc(1, sizeof(t_token));
-		new_token->str = (*token_list)->s;
-		new_token->str = remove_quotations(new_token->str);
-		new_token->next = NULL;
-		if (node->tokens == NULL)
-			node->tokens = new_token;
-		else
-		{
-			last = node->tokens;
-			while (last->next)
-				last = last->next;
-			last->next = new_token;
-		}
-		(*token_list) = (*token_list)->next;
+		ptr = ptr->next;
+		len++;
 	}
-	printf("end define_tokens!\n");
+	return (len);
+}
+
+char	*set_args_option(char *str)
+{
+	char	*option;
+	int		len;
+
+	printf("set_args_option str:%s ", str);
+	len = ft_strlen(str);
+	option = ft_calloc(len + 1, sizeof(char));
+	ft_strlcpy(option, str, len + 1);
+	return (option);
+}
+
+char	*set_args_content(t_str_list **list)
+{
+	char	*line;
+	t_str_list	*head;
+	int		len;
+	int		i;
+	int		j;
+
+	printf("start set_args_content!\n");
+	head = *list;
+	len = 0;
+	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '<')
+	{
+		(*list)->s = remove_quotations((*list)->s);
+		len += ft_strlen((*list)->s) + 1;
+		*list = (*list)->next;
+	}
+	line = ft_calloc(len, sizeof(char));
+	i = 0;
+	*list = head;
+	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '<')
+	{
+		j = 0;
+		while ((*list)->s[j])
+			line[i++] = (*list)->s[j++];
+		line[i++] = ' ';
+		*list = (*list)->next;
+	}
+	line[--i] = 0;
+	return (line);
+}
+
+
+char	**define_args(t_str_list **list, t_node *node)
+{
+	char	**args;
+	int		i;
+	t_str_list	*head;
+
+	printf("enter define_args!\n");
+	head = *list;
+	i = 0;
+	while (*list && *(*list)->s == '-' && *((*list)->next->s) != 0)
+	{
+		i++;
+		*list = (*list)->next;
+	}
+	args = ft_calloc(i + 3, sizeof(char **));
+	printf("size of arg: %d\n", i + 2);
+	args[0] = node->cm_content;
+	*list = head;
+	i = 1;
+	(*list)->s = remove_quotations((*list)->s);
+	while (*list && *(*list)->s == '-' && *((*list)->next->s) != 0)
+	{
+		args[i] = set_args_option((*list)->s);
+		*list = (*list)->next;
+		(*list)->s = remove_quotations((*list)->s);
+		i++;
+	}
+	args[i] = set_args_content(list);
+	args[++i] = NULL;
+	printf("end define_args!\n");
+	return (args);
 }
 
 t_node *command_node_creator(t_str_list **token_list)
@@ -136,12 +208,15 @@ t_node *command_node_creator(t_str_list **token_list)
 	else if (!(ft_strncmp((*token_list)->s, "$", 1)))
 		node->cm_kind = EXPANSION;
 	else
-	{
 		node->cm_kind = OTHER;
-		node->cm_content = (*token_list)->s;
-	}
+	node->cm_content = (*token_list)->s;
 	(*token_list) = (*token_list)->next;
-	define_tokens(token_list, node);
+	node->tokens = define_args(token_list, node);
+	if (*token_list)
+	{
+		(*token_list)->s = remove_quotations((*token_list)->s);
+		node->redirect_info = (*token_list)->s;
+	}
 	print_node(node);
 	printf("end command_node_creator!\n");
 	return (node);
@@ -165,7 +240,6 @@ t_node *pipe_node_creator(t_str_list **token_list)
 		if (*token_list && *((*token_list)->s) == '|')
 		{
 			*token_list = (*token_list)->next;
-			// node = new_node(ND_PIPE, node, pipe_node_creator(token_list));
 			node = new_node(ND_PIPE, node, command_node_creator(token_list));
 			print_node(node);
 		}
@@ -187,13 +261,11 @@ t_node	*semicolon_node_creator(t_str_list **token_list)
 		return (NULL);
 	}
 	node = pipe_node_creator(token_list);
-	// printf("first token:%s\n", **token_list);
 	while (1)
 	{
 		if (*token_list && *((*token_list)->s) == ';')
 		{
 			*token_list = (*token_list)->next;
-			// node = new_node(ND_SEMICOLON, node, semicolon_node_creator(token_list));
 			node = new_node(ND_SEMICOLON, node, pipe_node_creator(token_list));
 			print_node(node);
 		}
