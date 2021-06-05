@@ -1,5 +1,5 @@
-#include "parser.h"
 #include "minishell.h"
+#include "parser.h"
 
 int	echo(t_node *node)
 {

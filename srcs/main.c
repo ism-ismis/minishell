@@ -6,6 +6,8 @@ int	launch_builtin(t_node *node)
 {
 	if (node->cm_kind == ECHO)
 		echo(node);
+	else if (node->cm_kind == PWD)
+		pwd(node);
 	return (1);
 }
 
@@ -42,10 +44,9 @@ int	main(int ac, char **av, char **envp)
 	int		i;
 	t_node	*node;
 
-	//setvbuf(stdout, (char *)NULL, _IONBF, 0);
 	ft_printf("minishell > ");
 	//write(1, "minishell > ", 12);
-	fflush(stdout);
+	//fflush(stdout);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
