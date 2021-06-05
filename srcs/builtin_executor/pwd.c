@@ -1,7 +1,7 @@
 #include "minishell.h"
 #include "parser.h"
 
-int	pwd(t_node *node)
+int	ft_pwd(t_node *node)
 {
 	char	*buf;
 	int		i;

@@ -5,9 +5,19 @@
 int	launch_builtin(t_node *node)
 {
 	if (node->cm_kind == ECHO)
-		echo(node);
+		ft_echo(node);
 	else if (node->cm_kind == PWD)
-		pwd(node);
+		ft_pwd(node);
+	else if (node->cm_kind == CD)
+		ft_cd(node);
+	else if (node->cm_kind == EXPORT)
+		ft_export(node);
+	else if (node->cm_kind == UNSET)
+		ft_unset(node);
+	else if (node->cm_kind == ENV)
+		ft_env(node);
+	else if (node->cm_kind == EXIT)
+		ft_exit(node);
 	return (1);
 }
 
