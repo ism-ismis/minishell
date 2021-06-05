@@ -4,6 +4,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include "../srcs/libft/libft.h"
+# include "../srcs/printf/printf.h"
+
+typedef struct s_node t_node;
 
 typedef struct s_str_list
 {
@@ -17,5 +20,6 @@ int			is_separator(char c);
 t_str_list	*var_expansion(t_str_list *splited_lines);
 char		*remove_quotations(char *s);
 char		*ft_strldup(const char *src, long len);
+int			echo(t_node *node);
 
 #endif

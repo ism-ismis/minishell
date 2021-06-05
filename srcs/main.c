@@ -2,6 +2,13 @@
 #include "parser.h"
 
 
+int	launch_builtin(t_node *node)
+{
+	if (node->cm_kind == ECHO)
+		echo(node);
+	return (1);
+}
+
 int	launch_minishell(t_node *node)
 {
 	pid_t	pid;
@@ -35,7 +42,10 @@ int	main(int ac, char **av, char **envp)
 	int		i;
 	t_node	*node;
 
-	write(1, "minishell > ", 12);
+	//setvbuf(stdout, (char *)NULL, _IONBF, 0);
+	ft_printf("minishell > ");
+	//write(1, "minishell > ", 12);
+	fflush(stdout);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
@@ -43,7 +53,7 @@ int	main(int ac, char **av, char **envp)
 		tmp = splited_lines;
 		while (tmp)
 		{
-			printf("%s\n", tmp->s);
+			ft_printf("%s\n", tmp->s);
 			if (!ft_strcmp(tmp->s, "exit"))
 				exit(0);
 			tmp = tmp->next;
@@ -52,7 +62,10 @@ int	main(int ac, char **av, char **envp)
 		node = semicolon_node_creator(&splited_lines);
 		if (node->cm_kind == OTHER)
 			launch_minishell(node);
-		write(1, "minishell > ", 12);
+		else
+			launch_builtin(node);
+		ft_printf("minishell > ");
+		//write(1, "minishell > ", 12);
 	}
 	return (0);
 }
