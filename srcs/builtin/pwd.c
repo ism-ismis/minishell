@@ -1,7 +1,7 @@
 #include "minishell.h"
 #include "parser.h"
 
-int	ft_pwd(t_node *node)
+char	*ft_getcwd(void)
 {
 	char	*buf;
 	int		i;
@@ -18,6 +18,11 @@ int	ft_pwd(t_node *node)
 		if (!buf)//allocation error
 			return (0);
 	}
-	ft_printf("%s\n", buf);
+	return (buf);
+}
+
+int	ft_pwd(t_node *node)
+{
+	ft_printf("%s\n", ft_getcwd());
 	return (1);
 }

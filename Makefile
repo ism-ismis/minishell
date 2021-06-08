@@ -12,13 +12,13 @@ SRCNAME	= main.c \
 			parser/parser.c \
 			lexer/split.c \
 			lexer/expansion.c \
-			builtin_executor/echo.c \
-			builtin_executor/cd.c \
-			builtin_executor/pwd.c \
-			builtin_executor/export.c \
-			builtin_executor/unset.c \
-			builtin_executor/env.c \
-			builtin_executor/exit.c
+			builtin/echo.c \
+			builtin/cd.c \
+			builtin/pwd.c \
+			builtin/export.c \
+			builtin/unset.c \
+			builtin/env.c \
+			builtin/exit.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 

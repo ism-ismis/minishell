@@ -28,5 +28,6 @@ int			ft_export(t_node *node);
 int			ft_unset(t_node *node);
 int			ft_env(t_node *node);
 int			ft_exit(t_node *node);
+char		*ft_getcwd(void);
 
 #endif
