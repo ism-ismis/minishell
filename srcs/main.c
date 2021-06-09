@@ -21,22 +21,30 @@ int	launch_builtin(t_node *node)
 	return (1);
 }
 
-int	launch_minishell(t_node *node)
+int	launch_command_path(t_node *node)
 {
 	pid_t	pid;
 	pid_t	wpid;
 	int		status;
 	extern char **environ;
 
+	printf("Enter launch_command_path!\n");
 	pid = fork();
 	if (pid == 0)
 	{
 		print_node(node);
+		if (node->redirect_path)
+		{
+			int fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			dup2(fd, 1);
+			close(fd);
+		}
 		if (execve(node->cm_content, node->tokens, NULL) == -1)
-			perror("launch_minishell");
+			ft_printf("No such file or directory\n");
+			// perror("launch_minishell");
 	}
 	else if (pid < 0)
-		perror("launch_minishell");
+		perror("launch_command_path");
 	else
 	{
 		wpid = waitpid(pid, &status, WUNTRACED);
@@ -72,7 +80,7 @@ int	main(int ac, char **av, char **envp)
 		free(line);
 		node = semicolon_node_creator(&splited_lines);
 		if (node->cm_kind == OTHER)
-			launch_minishell(node);
+			launch_command_path(node);
 		else
 			launch_builtin(node);
 		ft_printf("minishell > ");

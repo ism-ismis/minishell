@@ -3,6 +3,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include "../srcs/libft/libft.h"
 # include "../srcs/printf/printf.h"
 # define GETCWD_SIZE 5
