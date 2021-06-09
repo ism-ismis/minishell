@@ -26,6 +26,7 @@ int	launch_command_path(t_node *node)
 	pid_t	pid;
 	pid_t	wpid;
 	int		status;
+	int 	fd;
 	extern char **environ;
 
 	printf("Enter launch_command_path!\n");
@@ -33,9 +34,21 @@ int	launch_command_path(t_node *node)
 	if (pid == 0)
 	{
 		print_node(node);
-		if (node->redirect_path)
+		if (node->rd_kind == OUT)
 		{
-			int fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			dup2(fd, 1);
+			close(fd);
+		}
+		else if (node->rd_kind == IN)
+		{
+			fd = open(node->redirect_path, O_RDONLY);
+			dup2(fd, 0);
+			close(fd);
+		}
+		else if (node->rd_kind == ADD)
+		{
+			fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_APPEND, 0666);
 			dup2(fd, 1);
 			close(fd);
 		}
