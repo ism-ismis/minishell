@@ -5,6 +5,7 @@
 # include <unistd.h>
 # include "../srcs/libft/libft.h"
 # include "../srcs/printf/printf.h"
+# define GETCWD_SIZE 5
 
 typedef struct s_node t_node;
 
@@ -20,6 +21,13 @@ int			is_separator(char c);
 t_str_list	*var_expansion(t_str_list *splited_lines);
 char		*remove_quotations(char *s);
 char		*ft_strldup(const char *src, long len);
-int			echo(t_node *node);
+int			ft_echo(t_node *node);
+int			ft_pwd(t_node *node);
+int			ft_cd(t_node *node);
+int			ft_export(t_node *node);
+int			ft_unset(t_node *node);
+int			ft_env(t_node *node);
+int			ft_exit(t_node *node);
+char		*ft_getcwd(void);
 
 #endif

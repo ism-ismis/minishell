@@ -5,7 +5,19 @@
 int	launch_builtin(t_node *node)
 {
 	if (node->cm_kind == ECHO)
-		echo(node);
+		ft_echo(node);
+	else if (node->cm_kind == PWD)
+		ft_pwd(node);
+	else if (node->cm_kind == CD)
+		ft_cd(node);
+	else if (node->cm_kind == EXPORT)
+		ft_export(node);
+	else if (node->cm_kind == UNSET)
+		ft_unset(node);
+	else if (node->cm_kind == ENV)
+		ft_env(node);
+	else if (node->cm_kind == EXIT)
+		ft_exit(node);
 	return (1);
 }
 
@@ -42,10 +54,9 @@ int	main(int ac, char **av, char **envp)
 	int		i;
 	t_node	*node;
 
-	//setvbuf(stdout, (char *)NULL, _IONBF, 0);
 	ft_printf("minishell > ");
 	//write(1, "minishell > ", 12);
-	fflush(stdout);
+	//fflush(stdout);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		splited_lines = shell_split(line);
