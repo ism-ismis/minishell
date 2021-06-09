@@ -12,11 +12,12 @@ void	free_node(t_node *node)
 		if (node->rhs)
 			free_node(node->rhs);
 		i = 1;
-		while (node->tokens[i])
-			free(node->tokens[i++]);
-		free(node->tokens);
-		free(node->redirect_path);
-		//free(node->cm_content);
+		if (node->tokens)
+		{
+			while (node->tokens[i])
+				free(node->tokens[i++]);
+			free(node->tokens);
+		}
 	}
 }
 

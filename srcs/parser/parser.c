@@ -20,23 +20,23 @@ void	print_node_command(t_node *node)
 {
 	if (node->nd_kind >= 1)
 	{
-		if (node->cm_kind == 1)
+		if (node->cm_kind == ECHO)
 			printf("nd_command:echo\n");
-		else if (node->cm_kind == 2)
+		else if (node->cm_kind == CD)
 			printf("nd_command:cd\n");
-		else if (node->cm_kind == 3)
+		else if (node->cm_kind == PWD)
 			printf("nd_command:pwd\n");
-		else if (node->cm_kind == 4)
+		else if (node->cm_kind == EXPORT)
 			printf("nd_command:export\n");
-		else if (node->cm_kind == 5)
+		else if (node->cm_kind == UNSET)
 			printf("nd_command:unset\n");
-		else if (node->cm_kind == 6)
+		else if (node->cm_kind == ENV)
 			printf("nd_command:env\n");
-		else if (node->cm_kind == 7)
+		else if (node->cm_kind == EXIT)
 			printf("nd_command:exit\n");
-		else if (node->cm_kind == 8)
+		else if (node->cm_kind == EXPANSION)
 			printf("nd_command:expansion\n");
-		else if (node->cm_kind == 9)
+		else if (node->cm_kind == OTHER)
 			printf("nd_command:%s\n", node->cm_content);
 		else
 			printf("nd_command:???\n");
@@ -188,7 +188,6 @@ char	*set_args_content(t_str_list **list)
 		*list = (*list)->next;
 	}
 	line[--i] = 0;
-	printf("line:%s\n", line);
 	return (line);
 }
 
@@ -258,7 +257,6 @@ void	set_redirect_path(t_str_list **list, t_node *node)
 		line[i] = node->tokens[tnum - 1][i];
 		i++;
 	}
-	printf("lineee:%s\n", line);
 	line[i++] = ' ';
 	free(node->tokens[tnum - 1]);
 	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '>')
@@ -270,7 +268,6 @@ void	set_redirect_path(t_str_list **list, t_node *node)
 		*list = (*list)->next;
 	}
 	line[--i] = 0;
-	printf("lineee:%s\n", line);
 	node->tokens[tnum - 1] = line;
 }
 

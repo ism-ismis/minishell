@@ -22,19 +22,33 @@ int	launch_builtin(t_node *node)
 
 int	launch_command_path(t_node *node)
 {
-	pid_t		pid;
-	pid_t		wpid;
-	int			status;
-	extern char	**environ;
+	pid_t	pid;
+	pid_t	wpid;
+	int		status;
+	int 	fd;
+	extern char **environ;
 
 	printf("Enter launch_command_path!\n");
+	print_node(node);
 	pid = fork();
 	if (pid == 0)
 	{
 		print_node(node);
-		if (node->redirect_path)
+		if (node->rd_kind == OUT)
 		{
-			int fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			dup2(fd, 1);
+			close(fd);
+		}
+		else if (node->rd_kind == IN)
+		{
+			fd = open(node->redirect_path, O_RDONLY);
+			dup2(fd, 0);
+			close(fd);
+		}
+		else if (node->rd_kind == ADD)
+		{
+			fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_APPEND, 0666);
 			dup2(fd, 1);
 			close(fd);
 		}
@@ -88,7 +102,7 @@ int	main(void)
 		tmp = splited_lines;
 		node = semicolon_node_creator(&splited_lines);
 		free(line);
-		free_list(tmp);
+
 		if (node->cm_kind == OTHER)
 			launch_command_path(node);
 			//launch_minishell(node);
@@ -96,10 +110,13 @@ int	main(void)
 			break ;
 		else
 			launch_builtin(node);
+		free_list(tmp);
 		free_node(node);
 		ft_printf("minishell > ");
 	}
+	free_list(tmp);
 	free_node(node);
-	system("leaks minishell");
+	free(node);
+	// system("leaks minishell");
 	return (0);
 }
