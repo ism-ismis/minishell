@@ -25,7 +25,9 @@ t_str_list	*get_next_word(char **line, t_str_list *splited_lines)
 		splited_lines = splited_lines->next;
 		splited_lines->s = ft_strldup(*line, i + 1 - j);
 	}
-	*line += i + 1 - j;
+	*line += i - j;
+	if (**line)
+		*line += 1;
 	return (splited_lines);
 }
 
@@ -36,7 +38,7 @@ t_str_list	*shell_split(char *line)
 
 	splited_lines = malloc(sizeof(t_str_list));
 	start = splited_lines;
-	while (*line)
+	while (line && *line)
 		splited_lines = get_next_word(&line, splited_lines);
 	splited_lines->next = NULL;
 	splited_lines = start->next;

@@ -8,8 +8,8 @@ FTPRINTF	= srcs/printf/libftprintf.a
 FTPRINTFDIR	= srcs/printf/
 SRCDIR	= srcs/
 SRCNAME	= main.c \
-			utils/get_next_line.c \
-			utils/get_next_line_utils.c \
+			utils2/get_next_line.c \
+			utils2/get_next_line_utils.c \
 			parser/parser.c \
 			lexer/split.c \
 			lexer/split_utils.c \

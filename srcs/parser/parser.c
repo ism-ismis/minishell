@@ -1,6 +1,5 @@
 #include "parser.h"
 
-
 void	print_tokens(char **tokens)
 {
 	int	i;
@@ -46,8 +45,8 @@ void	print_node_command(t_node *node)
 		print_tokens(node->tokens);
 	else
 		printf("node_tokens: NULL\n");
-	if (node->redirect_info)
-		printf("redirect_info:%s\n", node->redirect_info);
+	if (node->rd_kind)
+		printf("rd_kind:%d content:%s\n", node->rd_kind, node->redirect_path);
 }
 
 void	print_node(t_node *node)
@@ -119,6 +118,47 @@ char	*set_args_option(char *str)
 	return (option);
 }
 
+int	is_redirect(char *str, t_node *node)
+{
+	int	i;
+	int	sign;
+
+	i = 0;
+	sign = 0;
+	while (ft_isdigit(str[i]))
+	{
+		i++;
+		sign = 1;
+	}
+	if (sign == 0 && str[i] == '&')
+	{
+		i++;
+		sign = 2;
+	}
+	if (sign == 0 && str[i] == '>' && str[i + 1] == '\0')
+		node->rd_kind = OUT;
+	else if (sign == 0 && str[i] == '<' && str[i + 1] == '\0')
+		node->rd_kind = IN;
+	else if (sign == 0 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
+		node->rd_kind = ADD;
+	else if (sign == 1 && str[i] == '>' && str[i + 1] == '\0')
+		node->rd_kind = DIS_OUT;
+	else if (sign == 1 && str[i] == '<' && str[i + 1] == '\0')
+		node->rd_kind = DIS_IN;
+	else if (sign == 1 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
+		node->rd_kind = DIS_ADD;
+	else if (sign == 2 && str[i] == '>' && str[i + 1] == '\0')
+		node->rd_kind = STOE_OUT;
+	else if (sign == 2 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
+		node->rd_kind = STOE_ADD;
+	else
+	{
+		node->rd_kind = 0;
+		return (0);
+	}
+	return (1);
+}
+
 char	*set_args_content(t_str_list **list)
 {
 	char	*line;
@@ -130,7 +170,7 @@ char	*set_args_content(t_str_list **list)
 	printf("start set_args_content!\n");
 	head = *list;
 	len = 0;
-	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '<')
+	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '>')
 	{
 		(*list)->s = remove_quotations((*list)->s);
 		len += ft_strlen((*list)->s) + 1;
@@ -139,7 +179,7 @@ char	*set_args_content(t_str_list **list)
 	line = ft_calloc(len, sizeof(char));
 	i = 0;
 	*list = head;
-	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '<')
+	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '>')
 	{
 		j = 0;
 		while ((*list)->s[j])
@@ -148,9 +188,9 @@ char	*set_args_content(t_str_list **list)
 		*list = (*list)->next;
 	}
 	line[--i] = 0;
+	printf("line:%s\n", line);
 	return (line);
 }
-
 
 char	**define_args(t_str_list **list, t_node *node)
 {
@@ -185,6 +225,55 @@ char	**define_args(t_str_list **list, t_node *node)
 	return (args);
 }
 
+void	set_redirect_path(t_str_list **list, t_node *node)
+{
+	char	*line;
+	t_str_list	*head;
+	int		len;
+	int		i;
+	int		j;
+	int		tnum;
+
+	printf("start set_redirect_path!\n");
+	node->redirect_path = (*list)->s;
+	printf("redirect_path:%s\n", node->redirect_path);
+	*list = (*list)->next;
+	head = *list;
+	tnum = 0;
+	while (node->tokens[tnum])
+		tnum++;
+	printf("tnum:%d\n", tnum);
+	len = ft_strlen(node->tokens[tnum - 1]) + 1;
+	while (*list && *(*list)->s != ';' && *(*list)->s != '|')
+	{
+		(*list)->s = remove_quotations((*list)->s);
+		len += ft_strlen((*list)->s) + 1;
+		*list = (*list)->next;
+	}
+	line = ft_calloc(len, sizeof(char));
+	i = 0;
+	*list = head;
+	while (node->tokens[tnum - 1][i])
+	{
+		line[i] = node->tokens[tnum - 1][i];
+		i++;
+	}
+	printf("lineee:%s\n", line);
+	line[i++] = ' ';
+	free(node->tokens[tnum - 1]);
+	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '>')
+	{
+		j = 0;
+		while ((*list)->s[j])
+			line[i++] = (*list)->s[j++];
+		line[i++] = ' ';
+		*list = (*list)->next;
+	}
+	line[--i] = 0;
+	printf("lineee:%s\n", line);
+	node->tokens[tnum - 1] = line;
+}
+
 t_node *command_node_creator(t_str_list **token_list)
 {
 	t_node *node;
@@ -210,12 +299,19 @@ t_node *command_node_creator(t_str_list **token_list)
 	else
 		node->cm_kind = OTHER;
 	node->cm_content = (*token_list)->s;
-	(*token_list) = (*token_list)->next;
-	node->tokens = define_args(token_list, node);
-	if (*token_list)
+	if ((*token_list)->next)
 	{
-		(*token_list)->s = remove_quotations((*token_list)->s);
-		node->redirect_info = (*token_list)->s;
+		(*token_list) = (*token_list)->next;
+		node->tokens = define_args(token_list, node);
+		if (*token_list)
+		{
+			(*token_list)->s = remove_quotations((*token_list)->s);
+			if (is_redirect((*token_list)->s, node))
+			{
+				(*token_list) = (*token_list)->next;
+				set_redirect_path(token_list, node);
+			}
+		}
 	}
 	print_node(node);
 	printf("end command_node_creator!\n");

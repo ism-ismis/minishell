@@ -15,7 +15,7 @@ void	free_node(t_node *node)
 		while (node->tokens[i])
 			free(node->tokens[i++]);
 		free(node->tokens);
-		free(node->redirect_info);
+		free(node->redirect_path);
 		//free(node->cm_content);
 	}
 }

@@ -25,6 +25,18 @@ typedef enum	e_command_kind
 	OTHER
 }		t_command_kind;
 
+typedef enum	e_redirect_kind
+{
+	OUT = 1, /* > */
+	IN, /* < */
+	ADD, /* >> */
+	DIS_OUT, /* 2> */
+	DIS_IN, /* 2< */
+	DIS_ADD, /*2>> */
+	STOE_OUT, /* &> */
+	STOE_ADD, /* &>> */
+}		t_redirect_kind;
+
 typedef struct s_token
 {
 	char			*str;
@@ -38,7 +50,8 @@ typedef struct s_node
 	struct s_node	*lhs;
 	struct s_node	*rhs;
 	char			**tokens;
-	char			*redirect_info;
+	t_redirect_kind	rd_kind;
+	char			*redirect_path;
 	char			*cm_content;
 }		t_node;
 

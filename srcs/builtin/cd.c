@@ -26,6 +26,7 @@ char	*relative_to_absolute(char *relative_path, char *cwd)
 	char	*dir;
 	int		i;
 	char	*absolute_path;
+	char	*tmp;
 
 	if (*relative_path == '/')
 		absolute_path = ft_strdup("/");
@@ -37,14 +38,23 @@ char	*relative_to_absolute(char *relative_path, char *cwd)
 		dir = get_pre_dir(relative_path, i);
 		if (ft_strncmp(dir, ".", 2) && ft_strncmp(dir, "..", 3))
 		{
+			tmp = absolute_path;
 			absolute_path = ft_strjoin(absolute_path, "/");
+			free(tmp);
+			tmp = absolute_path;
 			absolute_path = ft_strjoin(absolute_path, dir);
+			free(tmp);
 		}
 		else if (!ft_strncmp(dir, "..", 3))
+		{
+			tmp = absolute_path;
 			absolute_path = remove_last_dir(absolute_path);
+			free(tmp);
+		}
 		i -= ft_strlen(dir);
 		if (i >= 0 && relative_path[i] == '/')
 			i--;
+		free(dir);
 	}
 	return (absolute_path);
 }
@@ -57,5 +67,7 @@ int	ft_cd(t_node *node)
 	cwd = ft_getcwd();
 	path = relative_to_absolute(node->tokens[1], cwd);
 	chdir(path);
+	free(cwd);
+	free(path);
 	return (1);
 }
