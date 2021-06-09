@@ -1,6 +1,7 @@
 NAME	= minishell
 CC		= gcc
-CFLAGS	= -I ./includes/
+CFLAGS	= -Wall -Wextra -Werror -I ./includes/
+#CFLAGS	+= -g -fsanitize=address
 LIBFT	= srcs/libft/libft.a
 LIBFTDIR	= srcs/libft/
 FTPRINTF	= srcs/printf/libftprintf.a
@@ -11,6 +12,7 @@ SRCNAME	= main.c \
 			utils/get_next_line_utils.c \
 			parser/parser.c \
 			lexer/split.c \
+			lexer/split_utils.c \
 			lexer/expansion.c \
 			builtin/echo.c \
 			builtin/cd.c \

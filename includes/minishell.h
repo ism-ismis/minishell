@@ -7,13 +7,15 @@
 # include "../srcs/printf/printf.h"
 # define GETCWD_SIZE 5
 
-typedef struct s_node t_node;
+extern char **environ;
+
+typedef struct s_node	t_node;
 
 typedef struct s_str_list
 {
 	char				*s;
 	struct s_str_list	*next;
-}				t_str_list;
+}			t_str_list;
 
 int			minishell_get_next_line(int fd, char **line);
 t_str_list	*shell_split(char *line);
@@ -28,6 +30,7 @@ int			ft_export(t_node *node);
 int			ft_unset(t_node *node);
 int			ft_env(t_node *node);
 int			ft_exit(t_node *node);
+void		free_node(t_node *node);
 char		*ft_getcwd(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 19:40:04 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/05/25 12:23:44 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 10:29:10 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ int	is_closed_correctly(char **line)
 			while ((*line)[++i] && (*line)[i] != '"')
 				;
 			if (!(*line)[i])
-				return (handle_odd_quote(line, i, DQUOTE));
+				return (handle_odd_quote(DQUOTE));
 		}
 		else if ((*line)[i] == '\'')
 		{
 			while ((*line)[++i] && (*line)[i] != '\'')
 				;
 			if (!(*line)[i])
-				return (handle_odd_quote(line, i, QUOTE));
+				return (handle_odd_quote(QUOTE));
 		}
 	}
 	return (1);

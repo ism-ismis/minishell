@@ -35,18 +35,13 @@ char	*relative_to_absolute(char *relative_path, char *cwd)
 	while (i >= 0)
 	{
 		dir = get_pre_dir(relative_path, i);
-		if (ft_strncmp(dir, ".", 2))
+		if (ft_strncmp(dir, ".", 2) && ft_strncmp(dir, "..", 3))
 		{
-			if (ft_strncmp(dir, "..", 3))
-			{
-				absolute_path = ft_strjoin(absolute_path, "/");
-				absolute_path = ft_strjoin(absolute_path, dir);
-			}
-			else
-			{
-				absolute_path = remove_last_dir(absolute_path);
-			}
+			absolute_path = ft_strjoin(absolute_path, "/");
+			absolute_path = ft_strjoin(absolute_path, dir);
 		}
+		else if (!ft_strncmp(dir, "..", 3))
+			absolute_path = remove_last_dir(absolute_path);
 		i -= ft_strlen(dir);
 		if (i >= 0 && relative_path[i] == '/')
 			i--;

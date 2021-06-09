@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:23:28 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/06/05 15:09:28 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 07:59:35 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static	int	ftprintf_strlen(char *s)
 			i++;
 	return (i);
 }
+
 void	ft_putstr_len(char *s, int len)
 {
 	int	i;

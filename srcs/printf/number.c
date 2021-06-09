@@ -6,18 +6,18 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 23:07:33 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/01/05 03:31:46 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 08:28:24 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-void			print(long arg, t_va *va_data, int len_blank, int len_rest)
+void	print(long arg, t_va *va_data, int len_blank, int len_rest)
 {
 	if (va_data->sign != -1)
 		put_blank(va_data->blank, len_blank);
 	if ((va_data->type == 'd' || va_data->type == 'u' || va_data->type == 'i')
-			&& arg < 0)
+		&& arg < 0)
 	{
 		write(1, "-", 1);
 		arg *= -1;
@@ -38,12 +38,12 @@ void			print(long arg, t_va *va_data, int len_blank, int len_rest)
 		va_data->len += len_blank;
 }
 
-static int		set_len(long arg, t_va *va_data, int len, int base)
+static int	set_len(long arg, t_va *va_data, int len, int base)
 {
 	int	len_rest;
 
-	if (va_data->blank == '0' && va_data->len == -1 &&
-			va_data->len < va_data->width && va_data->sign != -1)
+	if (va_data->blank == '0' && va_data->len == -1
+		&& va_data->len < va_data->width && va_data->sign != -1)
 	{
 		va_data->len = va_data->width;
 		if (arg < 0)
@@ -57,7 +57,7 @@ static int		set_len(long arg, t_va *va_data, int len, int base)
 	return (len_rest);
 }
 
-void			put_number(t_va *va_data, long arg, int base)
+void	put_number(t_va *va_data, long arg, int base)
 {
 	long	i;
 	int		len;
@@ -65,15 +65,17 @@ void			put_number(t_va *va_data, long arg, int base)
 	int		len_rest;
 
 	len = 1;
-	i = 1;
-	while (arg / (i *= base) != 0)
+	i = base;
+	while (arg / i != 0)
+	{
+		i *= base;
 		len++;
+	}
 	if (arg < 0 && base == 16)
-		while (i < 2147483648)
-		{
-			len++;
-			i *= base;
-		}
+	{
+		len = 8;
+		i = 4294967296;
+	}
 	if (va_data->blank == -1 || va_data->len != -1)
 		va_data->blank = ' ';
 	len_rest = set_len(arg, va_data, len, base);

@@ -6,16 +6,16 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 23:00:47 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/01/05 01:31:55 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 08:01:16 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include "printf.h"
 
-int		str_len(char *str)
+int	str_len(char *str)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (str[len] != '\0')
@@ -23,10 +23,10 @@ int		str_len(char *str)
 	return (len);
 }
 
-int		can_work(int len, char *base)
+int	can_work(int len, char *base)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < len)

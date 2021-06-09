@@ -6,14 +6,14 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:54:08 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/06/02 11:19:04 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 10:29:19 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "minishell.h"
 
-int	handle_odd_quote(char **line, int i, int quote_type)
+int	handle_odd_quote(int quote_type)
 {
 	if (quote_type == QUOTE)
 		write(1, "quote> ", 7);
