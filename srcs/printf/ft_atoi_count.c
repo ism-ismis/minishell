@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/29 04:39:41 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/01/04 23:05:46 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 07:59:14 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	is_over(long num, int minus, char next)
 	return (1);
 }
 
-int			ft_atoi_count(const char *str, t_va *va_data)
+int	ft_atoi_count(const char *str, t_va *va_data)
 {
 	long	num;
 	int		minus;

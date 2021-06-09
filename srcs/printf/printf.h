@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/29 02:09:38 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/01/05 01:27:05 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 08:24:15 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <unistd.h>
 # include "limits.h"
 
-typedef struct	s_va
+typedef struct s_va
 {
 	char	type;
 	int		sign;
@@ -30,6 +30,7 @@ typedef struct	s_va
 }				t_va;
 
 int				ft_printf(const char *s, ...);
+void			get_flag(char *s, va_list args, t_va *va_data);
 int				ft_atoi_count(const char *str, t_va *va_data);
 void			put_s(t_va *va_data, char *arg);
 void			put_c(t_va *va_data, char arg);

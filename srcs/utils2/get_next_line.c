@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 19:40:04 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/06/09 10:29:10 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 15:15:24 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	add(char **line, char **stat, int len)
 {
 	char	*tmp;
 
-	tmp = ft_strljoin(*line, *stat, len);
-	if (*line)
-		free(*line);
-	*line = tmp;
+  	tmp = ft_strljoin(*line, *stat, len);
+  	if (*line)
+  		free(*line);
+  	*line = tmp;
 }
 
 int	read_next_buf(int fd, char **line, char **stat)
@@ -78,7 +78,7 @@ int	get_next_buf(int fd, char **line, char **stat)
 	j = 0;
 	while (*stat && (*stat)[j] != '\0' && (*stat)[j] != '\n')
 		j++;
-	add(line, stat, j - 1);
+	add(line, stat, j);
 	if (*stat && (*stat)[j] == '\n' && is_closed_correctly(line))
 	{
 		s = *stat;
