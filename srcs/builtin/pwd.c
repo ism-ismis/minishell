@@ -12,8 +12,8 @@ char	*ft_getcwd(void)
 	i = 1;
 	while (!getcwd(buf, GETCWD_SIZE * i))
 	{
-		free(buf);
 		i++;
+		free(buf);
 		buf = malloc((GETCWD_SIZE * i + 1) * sizeof(char));
 		if (!buf)//allocation error
 			return (0);
@@ -23,6 +23,13 @@ char	*ft_getcwd(void)
 
 int	ft_pwd(t_node *node)
 {
-	ft_printf("%s\n", ft_getcwd());
+	char	*cwd;
+
+	(void)node;
+	cwd = ft_getcwd();
+	//OLDPWD=PWD
+	//PWD=cwd
+	ft_printf("%s\n", cwd);
+	free(cwd);
 	return (1);
 }

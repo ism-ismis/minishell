@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 17:54:08 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/06/09 10:29:19 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/06/09 15:23:24 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*insert(char *ss, char const *s1, char const *s2, int len)
 			ss[index++] = s1[i++];
 	i = 0;
 	if (s2)
-		while (s2[i] && i < len)
+		while (s2[i] && index < len)
 			ss[index++] = s2[i++];
 	ss[index] = '\0';
 	return (ss);
@@ -62,11 +62,13 @@ char	*ft_strljoin(char const *s1, char const *s2, int len)
 {
 	char	*ss;
 
+	if (len < 0)
+		len = 0;
 	len += ft_strlen(s1);
 	ss = (char *)malloc((len + 1) * sizeof(char));
 	if (!ss)
 		return (NULL);
-	ss = insert(ss, s1, s2, ft_strlen(s2));
+	ss = insert(ss, s1, s2, len);
 	return (ss);
 }
 

@@ -1,7 +1,6 @@
 #include "minishell.h"
 #include "parser.h"
 
-
 int	launch_builtin(t_node *node)
 {
 	if (node->cm_kind == ECHO)
@@ -30,6 +29,7 @@ int	launch_command_path(t_node *node)
 	extern char **environ;
 
 	printf("Enter launch_command_path!\n");
+	print_node(node);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -67,37 +67,56 @@ int	launch_command_path(t_node *node)
 	return (1);
 }
 
-int	main(int ac, char **av, char **envp)
+void	free_list(t_str_list *splited_lines)
+{
+	t_str_list	*tmp;
+
+	while (splited_lines)
+	{
+		tmp = splited_lines;
+		free(splited_lines->s);
+		splited_lines = splited_lines->next;
+		free(tmp);
+	}
+}
+
+int	main(void)
 {
 	char		*line;
 	t_str_list	*splited_lines;
 	t_str_list	*tmp;
-	int		i;
-	t_node	*node;
+	t_node		*node;
 
 	ft_printf("minishell > ");
-	//write(1, "minishell > ", 12);
-	//fflush(stdout);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
+		ft_printf("line[%p]:%s", line, line);
 		splited_lines = shell_split(line);
 		splited_lines = var_expansion(splited_lines);
 		tmp = splited_lines;
 		while (tmp)
 		{
-			ft_printf("%s\n", tmp->s);
-			if (!ft_strcmp(tmp->s, "exit"))
-				exit(0);
+			ft_printf("[%p][%p]%s\n", tmp, tmp->s, tmp->s);
 			tmp = tmp->next;
 		}
-		free(line);
+		tmp = splited_lines;
 		node = semicolon_node_creator(&splited_lines);
+		free(line);
+
 		if (node->cm_kind == OTHER)
 			launch_command_path(node);
+			//launch_minishell(node);
+		else if (node->cm_kind == EXIT)
+			break ;
 		else
 			launch_builtin(node);
+		free_list(tmp);
+		free_node(node);
 		ft_printf("minishell > ");
-		//write(1, "minishell > ", 12);
 	}
+	free_list(tmp);
+	free_node(node);
+	free(node);
+	// system("leaks minishell");
 	return (0);
 }

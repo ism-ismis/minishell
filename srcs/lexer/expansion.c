@@ -11,24 +11,13 @@ int	find_var(char *word)
 	return (i);
 }
 
-t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines)
+t_str_list	*insert_list(t_str_list *splited_lines, char *env)
 {
-	char	*var;
-	char	*env;
-	int		j;
 	t_str_list	*splited_env;
 	t_str_list	*tmp;
 
-	j = 0;
-	while (word[j] && word[j] != '$' && word[j] != '"'
-		&& word[j] != '\'' && !is_separator(word[j]))
-		j++;
-	var = ft_strldup(word, j);
-	env = getenv(var);
-	splited_lines->s = ft_strldup(splited_lines->s, i);
 	if (env)
 	{
-		printf("getenv(%s) = \"%s\"\n", var, env);
 		//splited_env = shell_split(env);
 		splited_env = malloc(sizeof(t_str_list));
 		splited_env->s = env;
@@ -43,6 +32,24 @@ t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines)
 			splited_lines->next = tmp;
 		}
 	}
+	return (splited_lines);
+}
+
+t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines)
+{
+	char		*var;
+	char		*env;
+	int			j;
+
+	j = 0;
+	while (word[j] && word[j] != '$' && word[j] != '"'
+		&& word[j] != '\'' && !is_separator(word[j]))
+		j++;
+	var = ft_strldup(word, j);
+	env = getenv(var);
+	printf("getenv(%s) = \"%s\"\n", var, env);
+	splited_lines->s = ft_strldup(splited_lines->s, i);
+	splited_lines = insert_list(splited_lines, env);
 	if (word[j])
 		splited_lines->s = ft_strjoin(splited_lines->s, word + j);
 	return (splited_lines);
@@ -59,14 +66,14 @@ char	*remove_quotations(char *s)
 		j = 1;
 		if (s[i] == '\'')
 		{
-			while (s[i+j] != '\'')
+			while (s[i + j] != '\'')
 				j++;
 			s = ft_strltrim(s, i--);
 			s = ft_strltrim(s, i + j);
 		}
 		else if (s[i] == '"')
 		{
-			while (s[i+j] != '"')
+			while (s[i + j] != '"')
 				j++;
 			s = ft_strltrim(s, i--);
 			s = ft_strltrim(s, i + j);
