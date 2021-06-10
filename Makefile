@@ -1,7 +1,7 @@
 NAME	= minishell
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -I ./includes/
-#CFLAGS	+= -g -fsanitize=address
+CFLAGS	+= -g -fsanitize=address
 LIBFT	= srcs/libft/libft.a
 LIBFTDIR	= srcs/libft/
 FTPRINTF	= srcs/printf/libftprintf.a

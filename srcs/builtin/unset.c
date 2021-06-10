@@ -20,7 +20,10 @@ int	ft_unset(t_node *node)
 		i++;
 	}
 	if (environ[i])
+	{
+		free(environ[i]);
 		memmove(environ + i, environ + i + 1,
 			(envlen - i + 1) * sizeof(char *));
+	}
 	return (1);
 }
