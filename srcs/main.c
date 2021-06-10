@@ -112,11 +112,12 @@ int	main(void)
 			launch_builtin(node);
 		free_list(tmp);
 		free_node(node);
+		free(node);
 		ft_printf("minishell > ");
 	}
 	free_list(tmp);
 	free_node(node);
 	free(node);
-	// system("leaks minishell");
+	//system("leaks minishell");
 	return (0);
 }
