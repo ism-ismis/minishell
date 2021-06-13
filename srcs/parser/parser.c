@@ -271,6 +271,17 @@ void	set_redirect_path(t_str_list **list, t_node *node)
 	node->tokens[tnum - 1] = line;
 }
 
+char	**set_tokens_no_args(t_node *node)
+{
+	char	**ret;
+
+	printf("set tokens_no_args start!\n");
+	ret = ft_calloc(2, sizeof(char *));
+	ret[0] = node->cm_content;
+	ret[1] = NULL;
+	return (ret);
+}
+
 t_node *command_node_creator(t_str_list **token_list)
 {
 	t_node *node;
@@ -310,6 +321,8 @@ t_node *command_node_creator(t_str_list **token_list)
 			}
 		}
 	}
+	else
+		node->tokens = set_tokens_no_args(node);
 	print_node(node);
 	printf("end command_node_creator!\n");
 	return (node);
@@ -366,4 +379,3 @@ t_node	*semicolon_node_creator(t_str_list **token_list)
 			return (node);
 	}
 }
-
