@@ -110,9 +110,9 @@ int	main(void)
 			break ;
 		else
 			launch_builtin(node);
-		free_list(tmp);
-		free_node(node);
-		free(node);
+		// free_list(tmp);
+		// free_node(node);
+		// free(node);
 		ft_printf("minishell > ");
 	}
 	free_list(tmp);

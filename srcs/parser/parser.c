@@ -125,7 +125,7 @@ int	is_redirect(char *str, t_node *node)
 
 	i = 0;
 	sign = 0;
-	while (ft_isdigit(str[i]))
+	if (str[i] == '2')
 	{
 		i++;
 		sign = 1;
@@ -189,6 +189,37 @@ char	*set_args_content(t_str_list **list)
 	}
 	line[--i] = 0;
 	return (line);
+}
+
+char	**define_args_cmpath(t_str_list **list, t_node *node)
+{
+	char	**args;
+	int		i;
+	t_str_list	*head;
+
+	printf("enter define_args_cmpath!\n");
+	head = *list;
+	i = 0;
+	while (*list)
+	{
+		i++;
+		*list = (*list)->next;
+	}
+	args = ft_calloc(i + 2, sizeof(char **));
+	printf("size of arg: %d\n", i + 1);
+	args[0] = node->cm_content;
+	*list = head;
+	i = 1;
+	while (*list)
+	{
+		(*list)->s = remove_quotations((*list)->s);
+		args[i] = (*list)->s;
+		*list = (*list)->next;
+		i++;
+	}
+	args[i] = NULL;
+	printf("end define_args_cmpath!\n");
+	return (args);
 }
 
 char	**define_args(t_str_list **list, t_node *node)
@@ -310,7 +341,10 @@ t_node *command_node_creator(t_str_list **token_list)
 	if ((*token_list)->next)
 	{
 		(*token_list) = (*token_list)->next;
-		node->tokens = define_args(token_list, node);
+		if (node->cm_kind == OTHER)
+			node->tokens = define_args_cmpath(token_list, node);
+		else
+			node->tokens = define_args(token_list, node);
 		if (*token_list)
 		{
 			(*token_list)->s = remove_quotations((*token_list)->s);
