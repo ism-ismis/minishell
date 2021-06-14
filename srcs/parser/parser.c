@@ -200,20 +200,22 @@ char	**define_args_cmpath(t_str_list **list, t_node *node)
 	printf("enter define_args_cmpath!\n");
 	head = *list;
 	i = 0;
-	while (*list)
+	(*list)->s = remove_quotations((*list)->s);
+	while (*list && !is_redirect((*list)->s, node))
 	{
 		i++;
 		*list = (*list)->next;
+		if (*list)
+			(*list)->s = remove_quotations((*list)->s);
 	}
 	args = ft_calloc(i + 2, sizeof(char **));
 	printf("size of arg: %d\n", i + 1);
 	args[0] = node->cm_content;
 	*list = head;
 	i = 1;
-	while (*list)
+	while (*list && !is_redirect((*list)->s, node))
 	{
-		(*list)->s = remove_quotations((*list)->s);
-		args[i] = (*list)->s;
+		args[i] = ft_strdup((*list)->s);
 		*list = (*list)->next;
 		i++;
 	}
