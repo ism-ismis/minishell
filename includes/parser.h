@@ -30,11 +30,11 @@ typedef enum	e_redirect_kind
 	OUT = 1, /* > */
 	IN, /* < */
 	ADD, /* >> */
-	DIS_OUT, /* 2> */
-	DIS_IN, /* 2< */
-	DIS_ADD, /*2>> */
-	STOE_OUT, /* &> */
-	STOE_ADD, /* &>> */
+	FD_OUT, /* 2> */
+	FD_IN, /* 2< */
+	FD_ADD, /*2>> */
+	// STOE_OUT, /* &> */
+	// STOE_ADD, /* &>> */
 }		t_redirect_kind;
 
 typedef struct s_token
@@ -51,7 +51,8 @@ typedef struct s_node
 	struct s_node	*rhs;
 	char			**tokens;
 	t_redirect_kind	rd_kind;
-	char			*redirect_path;
+	char			*rd_path;
+	int				rd_fd;
 	char			*cm_content;
 }		t_node;
 
