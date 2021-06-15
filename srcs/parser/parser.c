@@ -46,7 +46,9 @@ void	print_node_command(t_node *node)
 	else
 		printf("node_tokens: NULL\n");
 	if (node->rd_kind)
-		printf("rd_kind:%d content:%s\n", node->rd_kind, node->redirect_path);
+		printf("rd_kind:%d content:%s\n", node->rd_kind, node->rd_path);
+	if (node->rd_kind >= 4 && node->rd_fd <= 6)
+		printf("rd_fd:%d\n", node->rd_fd);
 }
 
 void	print_node(t_node *node)
@@ -121,19 +123,27 @@ char	*set_args_option(char *str)
 int	is_redirect(char *str, t_node *node)
 {
 	int	i;
+	int	fd;
 	int	sign;
 
 	i = 0;
 	sign = 0;
-	if (str[i] == '2')
+	fd = 0;
+	if (ft_isdigit(str[i]))
 	{
-		i++;
-		sign = 1;
+		while (ft_isdigit(str[i]))
+		{
+			fd *= 10;
+			fd += str[i] - 48;
+			sign = 1;
+			i++;
+		}
+		printf("fd:%d\n", fd);
 	}
-	if (sign == 0 && str[i] == '&')
+	else if (sign == 0 && str[i] == '&')
 	{
-		i++;
 		sign = 2;
+		i++;
 	}
 	if (sign == 0 && str[i] == '>' && str[i + 1] == '\0')
 		node->rd_kind = OUT;
@@ -142,15 +152,24 @@ int	is_redirect(char *str, t_node *node)
 	else if (sign == 0 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
 		node->rd_kind = ADD;
 	else if (sign == 1 && str[i] == '>' && str[i + 1] == '\0')
-		node->rd_kind = DIS_OUT;
+	{
+		node->rd_kind = FD_OUT;
+		node->rd_fd = fd;
+	}
 	else if (sign == 1 && str[i] == '<' && str[i + 1] == '\0')
-		node->rd_kind = DIS_IN;
+	{
+		node->rd_kind = FD_IN;
+		node->rd_fd = fd;
+	}
 	else if (sign == 1 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
-		node->rd_kind = DIS_ADD;
-	else if (sign == 2 && str[i] == '>' && str[i + 1] == '\0')
-		node->rd_kind = STOE_OUT;
-	else if (sign == 2 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
-		node->rd_kind = STOE_ADD;
+	{
+		node->rd_kind = FD_ADD;
+		node->rd_fd = fd;
+	}
+	// else if (sign == 2 && str[i] == '>' && str[i + 1] == '\0')
+	// 	node->rd_kind = STOE_OUT;
+	// else if (sign == 2 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
+	// 	node->rd_kind = STOE_ADD;
 	else
 	{
 		node->rd_kind = 0;
@@ -267,8 +286,8 @@ void	set_redirect_path(t_str_list **list, t_node *node)
 	int		tnum;
 
 	printf("start set_redirect_path!\n");
-	node->redirect_path = (*list)->s;
-	printf("redirect_path:%s\n", node->redirect_path);
+	node->rd_path = (*list)->s;
+	printf("rd_path:%s\n", node->rd_path);
 	*list = (*list)->next;
 	head = *list;
 	tnum = 0;

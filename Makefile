@@ -20,7 +20,8 @@ SRCNAME	= main.c \
 			builtin/export.c \
 			builtin/unset.c \
 			builtin/env.c \
-			builtin/exit.c
+			builtin/exit.c \
+			redirect/redirect.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 
