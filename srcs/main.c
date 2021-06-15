@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "parser.h"
+#include "redirect.h"
 
 int	launch_builtin(t_node *node)
 {
@@ -25,7 +26,7 @@ int	launch_command_path(t_node *node)
 	pid_t	pid;
 	pid_t	wpid;
 	int		status;
-	int 	fd;
+	// int 	fd;
 	extern char **environ;
 
 	printf("Enter launch_command_path!\n");
@@ -34,24 +35,8 @@ int	launch_command_path(t_node *node)
 	if (pid == 0)
 	{
 		print_node(node);
-		if (node->rd_kind == OUT)
-		{
-			fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			dup2(fd, 1);
-			close(fd);
-		}
-		else if (node->rd_kind == IN)
-		{
-			fd = open(node->redirect_path, O_RDONLY);
-			dup2(fd, 0);
-			close(fd);
-		}
-		else if (node->rd_kind == ADD)
-		{
-			fd = open(node->redirect_path, O_WRONLY | O_CREAT | O_APPEND, 0666);
-			dup2(fd, 1);
-			close(fd);
-		}
+		if (node->rd_kind > 0)
+			set_redirect(node);
 		if (execve(node->cm_content, node->tokens, NULL) == -1)
 			ft_printf("No such file or directory\n");
 			// perror("launch_minishell");
