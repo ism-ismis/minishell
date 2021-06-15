@@ -8,13 +8,15 @@ int	is_separator(char c)
 int	search_behind_redirect_option(char *s, int i)
 {
 	int	j;
+	char	rd_kind;
 
-	if (*s != '>')
+	if (*s != '>' && *s != '<')
 		return (0);
-	if (is_separator(s[i]) && s[i] != '>')
+	rd_kind = *s;
+	if (is_separator(s[i]) && s[i] != rd_kind)
 		return (0);
 	j = 0;
-	if (s[i] == '>')
+	if (s[i] == rd_kind)
 		j++;
 	if (s[i + j] == '&')
 	{
@@ -23,7 +25,7 @@ int	search_behind_redirect_option(char *s, int i)
 			j++;
 		if (is_separator(s[i + j]))
 			return (j);
-		if (s[i] == '>')
+		if (s[i] == rd_kind)
 			return (2);
 		else
 			return (1);
