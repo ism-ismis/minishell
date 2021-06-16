@@ -58,10 +58,15 @@ void	free_list(t_str_list *splited_lines)
 
 	while (splited_lines)
 	{
-		tmp = splited_lines;
-		free(splited_lines->s);
-		splited_lines = splited_lines->next;
-		free(tmp);
+		tmp = splited_lines->next;
+		if (splited_lines->s)
+		{
+			free(splited_lines->s);
+			splited_lines->s = NULL;
+		}
+		free(splited_lines);
+		splited_lines = NULL;
+		splited_lines = tmp;
 	}
 }
 
@@ -75,7 +80,7 @@ int	main(void)
 	ft_printf("minishell > ");
 	while (minishell_get_next_line(0, &line) == 1)
 	{
-		ft_printf("line[%p]:%s", line, line);
+		ft_printf("line[%p]:%s\n", line, line);
 		splited_lines = shell_split(line);
 		splited_lines = var_expansion(splited_lines);
 		tmp = splited_lines;
@@ -103,6 +108,6 @@ int	main(void)
 	free_list(tmp);
 	free_node(node);
 	free(node);
-	system("leaks minishell");
+	//system("leaks minishell");
 	return (0);
 }

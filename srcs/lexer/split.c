@@ -8,7 +8,7 @@ t_str_list	*get_next_word(char **line, t_str_list *splited_lines)
 
 	i = find_separator(*line);
 	j = 0;
-	if ((*line)[i] == '>')
+	if ((*line)[i] == '>' || (*line)[i] == '<')
 		j = search_front_redirect_option(*line, i);
 	if (i + j)
 	{

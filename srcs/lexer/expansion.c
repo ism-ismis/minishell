@@ -59,7 +59,9 @@ char	*remove_quotations(char *s)
 {
 	int		i;
 	int		j;
+	char	*tmp;
 
+	printf("s[%p]:%s\n", s, s);
 	i = 0;
 	while (s[i])
 	{
@@ -68,15 +70,23 @@ char	*remove_quotations(char *s)
 		{
 			while (s[i + j] != '\'')
 				j++;
+			tmp = s;
 			s = ft_strltrim(s, i--);
+			free(tmp);
+			tmp = s;
 			s = ft_strltrim(s, i + j);
+			free(tmp);
 		}
 		else if (s[i] == '"')
 		{
 			while (s[i + j] != '"')
 				j++;
+			tmp = s;
 			s = ft_strltrim(s, i--);
+			free(tmp);
+			tmp = s;
 			s = ft_strltrim(s, i + j);
+			free(tmp);
 		}
 		i += j;
 	}
