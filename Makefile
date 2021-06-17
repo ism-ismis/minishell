@@ -1,7 +1,9 @@
 NAME	= minishell
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -I ./includes/
-CFLAGS	+= -g -fsanitize=address
+RFLAGS = -I $(shell brew --prefix readline)/include
+LDFLAGS = -lreadline -lhistory -L$(shell brew --prefix readline)/lib
+# CFLAGS	+= -g -fsanitize=address
 LIBFT	= srcs/libft/libft.a
 LIBFTDIR	= srcs/libft/
 FTPRINTF	= srcs/printf/libftprintf.a
@@ -30,7 +32,7 @@ all:	$(NAME)
 $(NAME):	$(OBJS)
 	make -C $(LIBFTDIR)
 	make -C $(FTPRINTFDIR)
-	$(CC) $(CFLAGS) $(LIBFT) $(FTPRINTF) $^ -o $@
+	$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(LIBFT) $(FTPRINTF) $^ -o $@
 
 clean:
 	make -C $(LIBFTDIR) clean

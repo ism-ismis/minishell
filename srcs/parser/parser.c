@@ -1,5 +1,12 @@
 #include "parser.h"
 
+void	ft_safe_free(char **str)
+{
+	if (*str)
+		free(*str);
+	*str = NULL;
+}
+
 void	print_tokens(char **tokens)
 {
 	int	i;
@@ -46,7 +53,7 @@ void	print_node_command(t_node *node)
 	else
 		printf("node_tokens: NULL\n");
 	if (node->rd_kind)
-		printf("rd_kind:%d content:%s\n", node->rd_kind, node->rd_path);
+		printf("rd_kind:%d content:%s\n", node->rd_kind, node->rd_content);
 	if (node->rd_kind >= 4 && node->rd_fd <= 6)
 		printf("rd_fd:%d\n", node->rd_fd);
 }
@@ -151,6 +158,8 @@ int	is_redirect(char *str, t_node *node)
 		node->rd_kind = IN;
 	else if (sign == 0 && str[i] == '>' && str[i + 1] == '>' && str[i + 2] == '\0')
 		node->rd_kind = ADD;
+	else if (sign == 0 && str[i] == '<' && str[i + 1] == '<' && str[i + 2] == '\0')
+			node->rd_kind = HD;
 	else if (sign == 1 && str[i] == '>' && str[i + 1] == '\0')
 	{
 		node->rd_kind = FD_OUT;
@@ -286,8 +295,8 @@ void	set_redirect_path(t_str_list **list, t_node *node)
 	int		tnum;
 
 	printf("start set_redirect_path!\n");
-	node->rd_path = (*list)->s;
-	printf("rd_path:%s\n", node->rd_path);
+	node->rd_content = (*list)->s;
+	printf("rd_content:%s\n", node->rd_content);
 	*list = (*list)->next;
 	head = *list;
 	tnum = 0;
@@ -310,7 +319,6 @@ void	set_redirect_path(t_str_list **list, t_node *node)
 		i++;
 	}
 	line[i++] = ' ';
-	free(node->tokens[tnum - 1]);
 	while (*list && *(*list)->s != ';' && *(*list)->s != '|' && *(*list)->s != '<' && *(*list)->s != '>')
 	{
 		j = 0;
@@ -428,7 +436,7 @@ t_node	*semicolon_node_creator(t_str_list **token_list)
 		{
 			*token_list = (*token_list)->next;
 			node = new_node(ND_SEMICOLON, node, pipe_node_creator(token_list));
-			print_node(node);
+			// print_node(node);
 		}
 		else
 			return (node);

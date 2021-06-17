@@ -25,7 +25,7 @@ int	ft_exit(t_node *node)
 {
 	free_node(node);
 	free(node);
-	system("leaks minishell");
+	// system("leaks minishell");
 	exit(0);
 	return (1);
 }
