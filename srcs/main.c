@@ -37,8 +37,10 @@ int	launch_command_path(t_node *node)
 		print_node(node);
 		if (node->rd_kind > 0)
 			set_redirect(node);
-		if (execve(node->cm_content, node->tokens, NULL) == -1)
-			ft_printf("No such file or directory\n");
+		if (node->rd_kind == 4)
+			start_here_document(node);
+		else if (execve(node->cm_content, node->tokens, NULL) == -1)
+			ft_putendl_fd("No such file or directory", 2);
 			// perror("launch_minishell");
 	}
 	else if (pid < 0)
@@ -108,6 +110,6 @@ int	main(void)
 	free_list(tmp);
 	free_node(node);
 	free(node);
-	//system("leaks minishell");
+	// system("leaks minishell");
 	return (0);
 }

@@ -1,4 +1,0 @@
-hello 1
-hello world!
-world!
-pinkhellopink world!

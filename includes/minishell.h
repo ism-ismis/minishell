@@ -4,6 +4,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include "../srcs/libft/libft.h"
 # include "../srcs/printf/printf.h"
 # define GETCWD_SIZE 5

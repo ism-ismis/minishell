@@ -30,6 +30,7 @@ typedef enum	e_redirect_kind
 	OUT = 1, /* > */
 	IN, /* < */
 	ADD, /* >> */
+	HD, /* << */
 	FD_OUT, /* 2> */
 	FD_IN, /* 2< */
 	FD_ADD, /*2>> */
@@ -47,16 +48,17 @@ typedef struct s_node
 {
 	t_node_kind		nd_kind;
 	t_command_kind	cm_kind;
+	char			*cm_content;
 	struct s_node	*lhs;
 	struct s_node	*rhs;
 	char			**tokens;
 	t_redirect_kind	rd_kind;
-	char			*rd_path;
+	char			*rd_content;
 	int				rd_fd;
-	char			*cm_content;
 }		t_node;
 
 t_node	*semicolon_node_creator(t_str_list **token_list);
+void	ft_safe_free(char **str);
 
 void	print_node(t_node *node);
 
