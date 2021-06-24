@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "minishell.h"
 
 void	ft_safe_free(char **str)
 {

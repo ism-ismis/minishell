@@ -1,6 +1,7 @@
 #include "minishell.h"
+#include "utils.h"
 #include "parser.h"
-#include "redirect.h"
+#include "exec.h"
 
 int	launch_builtin(t_node *node)
 {
@@ -21,39 +22,6 @@ int	launch_builtin(t_node *node)
 	return (1);
 }
 
-int	launch_command_path(t_node *node)
-{
-	pid_t	pid;
-	pid_t	wpid;
-	int		status;
-	// int 	fd;
-	extern char **environ;
-
-	printf("Enter launch_command_path!\n");
-	print_node(node);
-	pid = fork();
-	if (pid == 0)
-	{
-		print_node(node);
-		if (node->rd_kind > 0)
-			set_redirect(node);
-		if (node->rd_kind == 4)
-			start_here_document(node);
-		else if (execve(node->cm_content, node->tokens, NULL) == -1)
-			ft_putendl_fd("No such file or directory", 2);
-			// perror("launch_minishell");
-	}
-	else if (pid < 0)
-		perror("launch_command_path");
-	else
-	{
-		wpid = waitpid(pid, &status, WUNTRACED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status))
-			wpid = waitpid(pid, &status, WUNTRACED);
-	}
-	return (1);
-}
-
 void	free_list(t_str_list *splited_lines)
 {
 	t_str_list	*tmp;
@@ -70,6 +38,45 @@ void	free_list(t_str_list *splited_lines)
 		splited_lines = NULL;
 		splited_lines = tmp;
 	}
+}
+
+int	exec_command(t_node *node)
+{
+	pid_t	pid;
+	pid_t	wpid;
+	int		status;
+	
+	printf("Enter exec_command!\n");
+	print_node(node);
+	pid = fork();
+	if (pid == 0)
+	{
+		if (node->rd_kind > 0)
+			set_redirect(node);
+		if (node->rd_kind == 4)
+			start_here_document(node);
+		else if (node->cm_kind == OTHER)
+		{
+			if (execve(node->cm_content, node->tokens, NULL) == -1)
+				ft_putendl_fd("No such file or directory", 2);
+		}
+		else if (node->cm_kind > 0)
+			launch_builtin(node);
+		else
+		{
+			printf("????\n");
+			return (1);
+		}	
+	}
+	else if (pid < 0)
+		perror("exec_command");
+	else
+	{
+		wpid = waitpid(pid, &status, WUNTRACED);
+		while (!WIFEXITED(status) && !WIFSIGNALED(status))
+			wpid = waitpid(pid, &status, WUNTRACED);
+	}
+	return (0);
 }
 
 int	main(void)
@@ -94,14 +101,14 @@ int	main(void)
 		tmp = splited_lines;
 		node = semicolon_node_creator(&splited_lines);
 		free(line);
-
-		if (node->cm_kind == OTHER)
-			launch_command_path(node);
-			//launch_minishell(node);
-		else if (node->cm_kind == EXIT)
-			break ;
-		else
-			launch_builtin(node);
+		if (exec_command(node) == 1)
+			break;
+		if (node->cm_kind == EXIT) /* pipeありの場合はexitしない */
+		{
+			free_node(node);
+			free(node);
+			exit(0); /*  本当はg_exit_codeを子プロセスから引き継ぎたい*/
+		}
 		free_list(tmp);
 		free_node(node);
 		free(node);
