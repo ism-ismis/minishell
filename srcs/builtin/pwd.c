@@ -29,7 +29,7 @@ int	ft_pwd(t_node *node)
 	cwd = ft_getcwd();
 	//OLDPWD=PWD
 	//PWD=cwd
-	ft_printf("%s\n", cwd);
+	ft_putendl_fd(cwd, 1);
 	free(cwd);
-	return (1);
+	exit (0);
 }

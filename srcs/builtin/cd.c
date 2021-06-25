@@ -69,5 +69,5 @@ int	ft_cd(t_node *node)
 	chdir(path);
 	free(cwd);
 	free(path);
-	return (1);
+	exit (0);
 }

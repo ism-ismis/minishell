@@ -34,11 +34,11 @@ int	ft_echo(t_node *node)
 		i++;
 	while (node->tokens[i])
 	{
-		ft_printf("%s", node->tokens[i]);
+		ft_putstr_fd(node->tokens[i], 1);
 		if (node->tokens[++i])
-			ft_printf(" ");
+			ft_putchar_fd(' ', 1);
 	}
 	if (new_line)
-		ft_printf("\n");
-	return (1);
+		ft_putchar_fd('\n', 1);
+	exit (0);
 }
