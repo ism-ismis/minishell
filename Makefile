@@ -1,8 +1,11 @@
 NAME	= minishell
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -I ./includes/
-RFLAGS = -I $(shell brew --prefix readline)/include
+#INCLUDES	= ./includes/
+RFLAGS	= -I $(shell brew --prefix readline)/include
+#CFLAGS	+= -I $(shell brew --prefix readline)/include
 LDFLAGS = -lreadline -lhistory -L$(shell brew --prefix readline)/lib
+#CFLAGS += -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 # CFLAGS	+= -g -fsanitize=address
 LIBFT	= srcs/libft/libft.a
 LIBFTDIR	= srcs/libft/
@@ -33,12 +36,8 @@ all:	$(NAME)
 $(NAME):	$(OBJS)
 	make -C $(LIBFTDIR)
 	make -C $(FTPRINTFDIR)
-	$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(LIBFT) $(FTPRINTF) $^ -o $@
-
-clean:
-	make -C $(LIBFTDIR) clean
-	make -C $(FTPRINTFDIR) clean
-	rm -f $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(LIBFT) $(FTPRINTF) $^ -o $@
+#	$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(LIBFT) $(FTPRINTF) $^ -o $@
 
 fclean:	clean
 	make -C $(LIBFTDIR) fclean
@@ -46,5 +45,9 @@ fclean:	clean
 	rm -f $(NAME)
 
 re:	fclean	all
+
+#.c.o:
+#	$(CC) $(CFLAGS)  $^
+#	$(CC) $(CFLAGS) -I $(INCLUDES) $(RFLAGS) $(LDFLAGS) $^
 
 .PHONY: $(NAME) all clean fclean re
