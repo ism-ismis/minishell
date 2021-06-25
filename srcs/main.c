@@ -86,23 +86,23 @@ int	main(void)
 	t_str_list	*tmp;
 	t_node		*node;
 
-	ft_printf("minishell > ");
+	ft_putstr_fd("minishell > ", 1);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
-		ft_printf("line[%p]:%s\n", line, line);
+		printf("line[%p]:%s\n", line, line);
 		splited_lines = shell_split(line);
 		splited_lines = var_expansion(splited_lines);
 		tmp = splited_lines;
 		while (tmp)
 		{
-			ft_printf("[%p][%p]%s\n", tmp, tmp->s, tmp->s);
+			printf("[%p][%p]%s\n", tmp, tmp->s, tmp->s);
 			tmp = tmp->next;
 		}
 		tmp = splited_lines;
 		node = semicolon_node_creator(&splited_lines);
 		free(line);
 		if (exec_command(node) == 1)
-			break;
+			break ;
 		if (node->cm_kind == EXIT) /* pipeありの場合はexitしない */
 		{
 			free_node(node);
@@ -112,7 +112,7 @@ int	main(void)
 		free_list(tmp);
 		free_node(node);
 		free(node);
-		ft_printf("minishell > ");
+		ft_putstr_fd("minishell > ", 1);
 	}
 	free_list(tmp);
 	free_node(node);

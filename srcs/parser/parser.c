@@ -249,42 +249,43 @@ char	**define_args_cmpath(t_str_list **list, t_node *node)
 		i++;
 	}
 	args[i] = NULL;
+	print_tokens(args);
 	printf("end define_args_cmpath!\n");
 	return (args);
 }
 
-char	**define_args(t_str_list **list, t_node *node)
-{
-	char	**args;
-	int		i;
-	t_str_list	*head;
+// char	**define_args(t_str_list **list, t_node *node)
+// {
+// 	char	**args;
+// 	int		i;
+// 	t_str_list	*head;
 
-	printf("enter define_args!\n");
-	head = *list;
-	i = 0;
-	while (*list && *(*list)->s == '-' && *((*list)->next->s) != 0)
-	{
-		i++;
-		*list = (*list)->next;
-	}
-	args = ft_calloc(i + 3, sizeof(char **));
-	printf("size of arg: %d\n", i + 2);
-	args[0] = node->cm_content;
-	*list = head;
-	i = 1;
-	(*list)->s = remove_quotations((*list)->s);
-	while (*list && *(*list)->s == '-' && *((*list)->next->s) != 0)
-	{
-		args[i] = set_args_option((*list)->s);
-		*list = (*list)->next;
-		(*list)->s = remove_quotations((*list)->s);
-		i++;
-	}
-	args[i] = set_args_content(list);
-	args[++i] = NULL;
-	printf("end define_args!\n");
-	return (args);
-}
+// 	printf("enter define_args!\n");
+// 	head = *list;
+// 	i = 0;
+// 	while (*list && *(*list)->s == '-' && *((*list)->next->s) != 0)
+// 	{
+// 		i++;
+// 		*list = (*list)->next;
+// 	}
+// 	args = ft_calloc(i + 3, sizeof(char **));
+// 	printf("size of arg: %d\n", i + 2);
+// 	args[0] = node->cm_content;
+// 	*list = head;
+// 	i = 1;
+// 	(*list)->s = remove_quotations((*list)->s);
+// 	while (*list && *(*list)->s == '-' && *((*list)->next->s) != 0)
+// 	{
+// 		args[i] = set_args_option((*list)->s);
+// 		*list = (*list)->next;
+// 		(*list)->s = remove_quotations((*list)->s);
+// 		i++;
+// 	}
+// 	args[i] = set_args_content(list);
+// 	args[++i] = NULL;
+// 	printf("end define_args!\n");
+// 	return (args);
+// }
 
 void	set_redirect_path(t_str_list **list, t_node *node)
 {
@@ -371,10 +372,11 @@ t_node *command_node_creator(t_str_list **token_list)
 	if ((*token_list)->next)
 	{
 		(*token_list) = (*token_list)->next;
-		if (node->cm_kind == OTHER)
-			node->tokens = define_args_cmpath(token_list, node);
-		else
-			node->tokens = define_args(token_list, node);
+		// if (node->cm_kind == OTHER)
+		// 	node->tokens = define_args_cmpath(token_list, node);
+		// else
+		// 	node->tokens = define_args(token_list, node);
+		node->tokens = define_args_cmpath(token_list, node);
 		if (*token_list)
 		{
 			(*token_list)->s = remove_quotations((*token_list)->s);

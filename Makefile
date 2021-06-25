@@ -6,8 +6,6 @@ LDFLAGS = -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 # CFLAGS	+= -g -fsanitize=address
 LIBFT	= srcs/libft/libft.a
 LIBFTDIR	= srcs/libft/
-FTPRINTF	= srcs/printf/libftprintf.a
-FTPRINTFDIR	= srcs/printf/
 SRCDIR	= srcs/
 SRCNAME	= main.c \
 			utils/get_next_line.c \
@@ -28,21 +26,18 @@ SRCNAME	= main.c \
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 
-all:	$(NAME)
+all:		$(NAME)
 
 $(NAME):	$(OBJS)
-	make -C $(LIBFTDIR)
-	make -C $(FTPRINTFDIR)
-	$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(LIBFT) $(FTPRINTF) $^ -o $@
+			$(MAKE) -C $(LIBFTDIR)
+			$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
 clean:
-	make -C $(LIBFTDIR) clean
-	make -C $(FTPRINTFDIR) clean
+	$(MAKE) -C $(LIBFTDIR) clean
 	rm -f $(OBJS)
 
 fclean:	clean
-	make -C $(LIBFTDIR) fclean
-	make -C $(FTPRINTFDIR) fclean
+	$(MAKE) -C $(LIBFTDIR) fclean
 	rm -f $(NAME)
 
 re:	fclean	all
