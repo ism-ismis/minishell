@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "minishell.h"
+#include "../srcs/libft/libft.h"
 
 int	handle_odd_quote(int quote_type)
 {

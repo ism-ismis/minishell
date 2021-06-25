@@ -12,6 +12,7 @@ SRCDIR	= srcs/
 SRCNAME	= main.c \
 			utils/get_next_line.c \
 			utils/get_next_line_utils.c \
+			utils/error.c \
 			parser/parser.c \
 			lexer/split.c \
 			lexer/split_utils.c \
@@ -23,7 +24,7 @@ SRCNAME	= main.c \
 			builtin/unset.c \
 			builtin/env.c \
 			builtin/exit.c \
-			redirect/redirect.c
+			exec/redirect.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 

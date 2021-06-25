@@ -1,4 +1,6 @@
-#include "redirect.h"
+#include "exec.h"
+# include "minishell.h"
+# include "parser.h"
 
 void print_list(t_list *list)
 {
@@ -7,7 +9,7 @@ void print_list(t_list *list)
   ptr = list;
   while (ptr)
   {
-    printf("%s\n", ptr->content);
+    printf("%s\n", (char *)ptr->content);
     ptr = ptr->next;
   }
 }

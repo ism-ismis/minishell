@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "minishell.h"
+#include "../srcs/libft/libft.h"
+// #include "minishell.h"
 
 void	add(char **line, char **stat, int len)
 {

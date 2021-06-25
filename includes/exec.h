@@ -1,8 +1,7 @@
-#ifndef REDIRECT_H
-# define REDIRECT_H
+#ifndef EXEC_H
+# define EXEC_H
 
-#include "minishell.h"
-#include "parser.h"
+typedef struct s_node	t_node;
 
 void set_redirect(t_node *node);
 void start_here_document(t_node *node);

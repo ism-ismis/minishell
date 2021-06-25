@@ -1,9 +1,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-#include "minishell.h"
-
-typedef int t_bool;
+typedef struct s_str_list t_str_list;
 
 typedef enum e_node_kind {
 	ND_EOF = -1,
