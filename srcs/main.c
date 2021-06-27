@@ -79,6 +79,13 @@ int	exec_command(t_node *node)
 	return (0);
 }
 
+void	inthandler(int sig)
+{
+	(void)sig;
+	//printf("sig:%d\n", sig);
+	ft_putstr_fd("\nminishell > ", 1);
+}
+
 int	main(void)
 {
 	char		*line;
@@ -86,6 +93,8 @@ int	main(void)
 	t_str_list	*tmp;
 	t_node		*node;
 
+	signal(SIGINT, inthandler);
+	signal(SIGQUIT, SIG_IGN);
 	ft_putstr_fd("minishell > ", 1);
 	while (minishell_get_next_line(0, &line) == 1)
 	{
