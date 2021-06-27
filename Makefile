@@ -1,7 +1,7 @@
 NAME	= minishell
 CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -I ./includes/
-RFLAGS = -I $(shell brew --prefix readline)/include
+RFLAGS	= -I $(shell brew --prefix readline)/include
 LDFLAGS = -lreadline -lhistory -L$(shell brew --prefix readline)/lib
 # CFLAGS	+= -g -fsanitize=address
 LIBFT	= srcs/libft/libft.a

@@ -47,6 +47,8 @@ t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines)
 		j++;
 	var = ft_strldup(word, j);
 	env = getenv(var);
+	if (!ft_strcmp(var, "?"))
+		env = ft_strdup("exit status");
 	printf("getenv(%s) = \"%s\"\n", var, env);
 	splited_lines->s = ft_strldup(splited_lines->s, i);
 	splited_lines = insert_list(splited_lines, env);

@@ -73,6 +73,7 @@ int	exec_command(t_node *node)
 	else
 	{
 		wpid = waitpid(pid, &status, WUNTRACED);
+		printf("status:%d\n", WEXITSTATUS(status));
 		while (!WIFEXITED(status) && !WIFSIGNALED(status))
 			wpid = waitpid(pid, &status, WUNTRACED);
 	}
@@ -92,6 +93,7 @@ int	main(void)
 	t_str_list	*splited_lines;
 	t_str_list	*tmp;
 	t_node		*node;
+	//int			i=1;
 
 	signal(SIGINT, inthandler);
 	signal(SIGQUIT, SIG_IGN);
@@ -99,6 +101,9 @@ int	main(void)
 	while (minishell_get_next_line(0, &line) == 1)
 	{
 		printf("line[%p]:%s\n", line, line);
+		add_history(line);
+		//HIST_ENTRY *x = history_get(i++);
+		//printf("history:%s\n", x->line);
 		splited_lines = shell_split(line);
 		splited_lines = var_expansion(splited_lines);
 		tmp = splited_lines;
@@ -123,6 +128,7 @@ int	main(void)
 		free(node);
 		ft_putstr_fd("minishell > ", 1);
 	}
+	printf("exit\n");
 	free_list(tmp);
 	free_node(node);
 	free(node);
