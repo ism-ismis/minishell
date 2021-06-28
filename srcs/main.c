@@ -86,22 +86,27 @@ void	inthandler(int sig)
 {
 	(void)sig;
 	//printf("sig:%d\n", sig);
-	ft_putstr_fd("\nminishell > ", 1);
+	exit(130);
 }
 
-int	main(void)
+int	command_launcher(void)
 {
+	pid_t		pid;
+	pid_t		wpid;
 	char		*line;
 	t_str_list	*splited_lines;
 	t_str_list	*tmp;
 	t_node		*node;
+	static int	status;
 	//int			i=1;
 
-	signal(SIGINT, inthandler);
-	signal(SIGQUIT, SIG_IGN);
-	ft_putstr_fd("minishell > ", 1);
-	while (minishell_get_next_line(0, &line) == 1)
+	pid = fork();
+	if (pid == 0)
 	{
+		signal(SIGINT, inthandler);//ctrl-C
+		ft_putstr_fd("minishell > ", 1);
+		if (minishell_get_next_line(0, &line) != 1)
+			return (1);
 		printf("line[%p]:%s\n", line, line);
 		add_history(line);
 		//HIST_ENTRY *x = history_get(i++);
@@ -118,7 +123,7 @@ int	main(void)
 		node = semicolon_node_creator(&splited_lines);
 		free(line);
 		if (exec_command(node) == 1)
-			break ;
+			return (0);
 		if (node->cm_kind == EXIT) /* pipeありの場合はexitしない */
 		{
 			free_node(node);
@@ -128,12 +133,32 @@ int	main(void)
 		free_list(tmp);
 		free_node(node);
 		free(node);
-		ft_putstr_fd("minishell > ", 1);
 	}
-	printf("exit\n");
-	free_list(tmp);
-	free_node(node);
-	free(node);
+	else if (pid < 0)
+		perror("launch command line");
+	else
+	{
+		signal(SIGINT, SIG_IGN);//ctrl-C
+		wpid = waitpid(pid, &status, WUNTRACED);
+		printf("status:%d\n", WEXITSTATUS(status));
+		while (!WIFEXITED(status) && !WIFSIGNALED(status))
+			wpid = waitpid(pid, &status, WUNTRACED);
+	}
+	//printf("exit\n");
+	//free_list(tmp);
+	//free_node(node);
+	//free(node);
+	return (0);
+}
+
+int	main(void)
+{
+	int			n;
+
+	signal(SIGQUIT, SIG_IGN);
+	n = command_launcher();
+	while (!n)
+		n = command_launcher();
 	// system("leaks minishell");
 	return (0);
 }
