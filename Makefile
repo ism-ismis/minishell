@@ -22,15 +22,19 @@ SRCNAME	= main.c \
 			builtin/unset.c \
 			builtin/env.c \
 			builtin/exit.c \
-			exec/redirect.c
+			exec/redirect.c \
+			exec/command_path.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
+LIBS	= -lft -L $(LIBFTDIR)
 
 all:		$(NAME)
 
-$(NAME):	$(OBJS)
+$(NAME):	$(OBJS) $(LIBFT)
 			$(MAKE) -C $(LIBFTDIR)
-			$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+			$(CC) $(CFLAGS) $(RFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+$(LIBFT):
+			$(MAKE) -C $(LIBFTDIR)
 
 clean:
 	$(MAKE) -C $(LIBFTDIR) clean

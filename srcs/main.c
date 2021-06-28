@@ -57,6 +57,8 @@ int	exec_command(t_node *node)
 			start_here_document(node);
 		else if (node->cm_kind == OTHER)
 		{
+			if (node->cm_content[0] != '/')
+				node->cm_content = cm_relative_to_absolute(node);
 			if (execve(node->cm_content, node->tokens, NULL) == -1)
 				ft_putendl_fd("No such file or directory", 2);
 		}
