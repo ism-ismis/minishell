@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 19:40:04 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/07/03 14:19:20 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/07/03 16:56:56 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,17 @@ int	get_next_buf(int fd, char **line, char **stat)
 	j = 0;
 	while (*stat && (*stat)[j] != '\0' && (*stat)[j] != '\n')
 	{
-		/*
 		if ((*stat)[j] == 0x1b && (*stat)[j + 1] == 0x5b
 			&& ((*stat)[j + 2] == 0x41 || (*stat)[j + 2] == 0x42))
 		{
-		   if ((*stat)[j + 2] == 0x41)
-			   kill(pid, SIGUSR1);
-		   else if ((*stat)[j + 2] == 0x42)
-			   kill(pid, SIGUSR2);
-		   j += 2;
+			/*
+			if ((*stat)[j + 2] == 0x41)
+				up_line();
+			else if ((*stat)[j + 2] == 0x42)
+			   down_line(original_s);
+			j += 2;
+			*/
 		}
-		*/
 		printf("%x ", (*stat)[j]);
 		j++;
 	}
