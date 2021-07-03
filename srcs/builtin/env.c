@@ -12,5 +12,5 @@ int	ft_env(t_node *node)
 		printf("%s\n", environ[i]);
 		i++;
 	}
-	exit (0);
+	return (0);
 }

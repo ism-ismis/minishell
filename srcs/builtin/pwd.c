@@ -31,5 +31,5 @@ int	ft_pwd(t_node *node)
 	//PWD=cwd
 	ft_putendl_fd(cwd, 1);
 	free(cwd);
-	exit (0);
+	return (0);
 }

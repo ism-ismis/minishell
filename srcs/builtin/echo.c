@@ -40,5 +40,5 @@ int	ft_echo(t_node *node)
 	}
 	if (new_line)
 		ft_putchar_fd('\n', 1);
-	exit (0);
+	return (0);
 }
