@@ -29,7 +29,7 @@ int			is_separator(char c);
 t_str_list	*var_expansion(t_str_list *splited_lines, int *status);
 char		*remove_quotations(char *s);
 char		*ft_strldup(const char *src, long len);
-int			new_prompt(void);
+int			new_prompt(int pre_status);
 int			ft_echo(t_node *node);
 int			ft_pwd(t_node *node);
 int			ft_cd(t_node *node);

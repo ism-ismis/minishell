@@ -49,8 +49,13 @@ t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines, int *statu
 	env = getenv(var);
 	if (!ft_strcmp(var, "?"))
 	{
-		printf("$? -> %d\n", WEXITSTATUS(*status));
-		env = ft_strdup(ft_itoa(WEXITSTATUS(*status)));
+		printf("$? -> %d or %d or %d\n", *status, WEXITSTATUS(*status), WTERMSIG(*status));
+		if (WIFSIGNALED(*status))
+			env = ft_strdup(ft_itoa(WEXITSTATUS(*status)));
+		else if (WIFEXITED(*status))
+			env = ft_strdup(ft_itoa(WTERMSIG(*status)));
+		else
+			env = ft_strdup(ft_itoa(*status));
 	}
 	printf("getenv(%s) = \"%s\"\n", var, env);
 	splited_lines->s = ft_strldup(splited_lines->s, i);
@@ -114,7 +119,6 @@ t_str_list	*var_expansion(t_str_list *splited_lines, int *status)
 		while (word && *word)
 		{
 			word++;
-			printf("	status:%d\n", WEXITSTATUS(*status));
 			splited_lines = replace_var(i, word, splited_lines, status);
 			while (*word && *word != '$' && *word != '"'
 				&& *word != '\'' && !is_separator(*word))

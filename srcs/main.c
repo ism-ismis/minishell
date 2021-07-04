@@ -54,7 +54,10 @@ int	exec_command(t_node *node, int *status)
 		if (node->cm_content[0] != '/')
 			node->cm_content = cm_relative_to_absolute(node);
 		if (execve(node->cm_content, node->tokens, NULL) == -1)
-			ft_putendl_fd("No such file or directory", 2);
+		{
+			ft_putendl_fd("No such file or directory!", 2);
+			exit(127);
+		}
 		exit(0);
 	}
 	else if (pid < 0)
@@ -73,8 +76,8 @@ void	inthandler(int sig)
 	(void)sig;
 	//printf("sig:%d\n", sig);
 	//exit (130);
-	printf("\n");
-	new_prompt();
+	ft_putstr_fd("\nminishell > ", 1);
+	return ;
 }
 
 void	ft_print_history(void)
@@ -110,7 +113,6 @@ t_node	*get_tree(int status)
 		printf("exit\n");
 		exit(0);//n == 0 -> ctrl-D
 	}
-	printf("add %s\n", line);
 	add_history(line);
 	ft_print_history();
 	splited_lines = shell_split(line);
@@ -128,11 +130,13 @@ t_node	*get_tree(int status)
 	return (node);
 }
 
-int	new_prompt(void)
+int	new_prompt(int pre_status)
 {
 	t_node		*node;
 	static int	status;
 
+	if (pre_status)
+		status = pre_status;
 	node = get_tree(status);
 	if (node->rd_kind == 4)
 		start_here_document(node);
@@ -164,9 +168,10 @@ int	main(void)
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, inthandler);//ctrl-C
-	n = new_prompt();
+	new_prompt(0);
+	n = new_prompt(0);
 	while (!n)
-		n = new_prompt();
+		n = new_prompt(0);
 	// system("leaks minishell");
 	return (0);
 }
