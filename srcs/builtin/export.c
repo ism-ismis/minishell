@@ -51,5 +51,5 @@ int	ft_export(t_node *node)
 		memmove(environ + envlen + 1, environ + envlen, 1 * sizeof(char *));
 		environ[envlen] = ft_setenv(node->tokens[1]);
 	}
-	exit (0);
+	return (0);
 }

@@ -69,7 +69,7 @@ void	free_node(t_node *node)
 	}
 }
 
-void	ft_exit(t_node *node)
+int	ft_exit(t_node *node)
 {
 	unsigned char	exit_code;
 	
@@ -89,5 +89,5 @@ void	ft_exit(t_node *node)
 	}
 	printf("exit code:%d\n", exit_code);
 	// system("leaks minishell");
-	exit(exit_code);
+	return(exit_code);
 }

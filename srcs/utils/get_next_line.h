@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 00:58:32 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/06/09 15:16:15 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/07/03 14:19:43 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <limits.h>
+# include <sys/types.h>
+# include <signal.h>
 # define BUFFER_SIZE 10
 # define QUOTE 1
 # define DQUOTE 2

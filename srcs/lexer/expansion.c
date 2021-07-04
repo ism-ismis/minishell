@@ -35,7 +35,7 @@ t_str_list	*insert_list(t_str_list *splited_lines, char *env)
 	return (splited_lines);
 }
 
-t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines)
+t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines, int *status)
 {
 	char		*var;
 	char		*env;
@@ -48,7 +48,15 @@ t_str_list	*replace_var(int i, char *word, t_str_list *splited_lines)
 	var = ft_strldup(word, j);
 	env = getenv(var);
 	if (!ft_strcmp(var, "?"))
-		env = ft_strdup("exit status");
+	{
+		printf("$? -> %d or %d or %d\n", *status, WEXITSTATUS(*status), WTERMSIG(*status));
+		if (WIFSIGNALED(*status))
+			env = ft_strdup(ft_itoa(WEXITSTATUS(*status)));
+		else if (WIFEXITED(*status))
+			env = ft_strdup(ft_itoa(WTERMSIG(*status)));
+		else
+			env = ft_strdup(ft_itoa(*status));
+	}
 	printf("getenv(%s) = \"%s\"\n", var, env);
 	splited_lines->s = ft_strldup(splited_lines->s, i);
 	splited_lines = insert_list(splited_lines, env);
@@ -95,7 +103,7 @@ char	*remove_quotations(char *s)
 	return (s);
 }
 
-t_str_list	*var_expansion(t_str_list *splited_lines)
+t_str_list	*var_expansion(t_str_list *splited_lines, int *status)
 {
 	char		*word;
 	t_str_list	*start;
@@ -111,7 +119,7 @@ t_str_list	*var_expansion(t_str_list *splited_lines)
 		while (word && *word)
 		{
 			word++;
-			splited_lines = replace_var(i, word, splited_lines);
+			splited_lines = replace_var(i, word, splited_lines, status);
 			while (*word && *word != '$' && *word != '"'
 				&& *word != '\'' && !is_separator(*word))
 				word++;

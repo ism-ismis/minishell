@@ -25,5 +25,5 @@ int	ft_unset(t_node *node)
 		memmove(environ + i, environ + i + 1,
 			(envlen - i + 1) * sizeof(char *));
 	}
-	exit (0);
+	return (0);
 }
