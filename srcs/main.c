@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "parser.h"
 #include "exec.h"
+#include "ft_history.h"
 
 int	launch_builtin(t_node *node)
 {
@@ -80,23 +81,6 @@ void	inthandler(int sig)
 	return ;
 }
 
-void	ft_print_history(void)
-{
-	int	i;
-	HIST_ENTRY *x;
-
-	printf("~~~~history~~~~\n");
-	i = 1;
-	x = history_get(i);
-	while (x)
-	{
-		printf("history[%d]:%s\n", i, x->line);
-		x = history_get(i);
-		i++;
-	}
-	return ;
-}
-
 t_node	*get_tree(int status)
 {
 	char		*line;
@@ -104,17 +88,21 @@ t_node	*get_tree(int status)
 	t_str_list	*tmp;
 	t_node		*node;
 	int			n;
+	static t_inter_list	*ft_history;
 
 	ft_putstr_fd("minishell > ", 1);
-	n = minishell_get_next_line(0, &line);
+	n = minishell_get_next_line(0, &line, ft_history);
 	if (n != 1)
 	{
 		free(line);
 		printf("exit\n");
 		exit(0);//n == 0 -> ctrl-D
 	}
-	add_history(line);
-	ft_print_history();
+	ft_history = ft_add_history(ft_history, line);
+	if (!ft_history)
+		return (NULL);
+	//add_history(line);
+	ft_print_history(ft_history);
 	splited_lines = shell_split(line);
 	splited_lines = var_expansion(splited_lines, &status);
 	tmp = splited_lines;
@@ -138,6 +126,8 @@ int	new_prompt(int pre_status)
 	if (pre_status)
 		status = pre_status;
 	node = get_tree(status);
+	if (!node)
+		return (0);//return (-1);?
 	if (node->rd_kind == 4)
 		start_here_document(node);
 	else if (node->rd_kind > 0)
@@ -162,10 +152,42 @@ int	new_prompt(int pre_status)
 	return (0);
 }
 
+void	readlinetest()
+{
+	char	*line = readline("test>>");
+	char	*s;
+	char	bs = 8;
+
+	s = malloc(2);
+	*s = 0;
+	while (!*s)
+	{
+		int	read_no = read(0, s, 1);
+		if (*s == 8 || *s == 127)
+			write(1, &bs, 1);
+		else
+			write(1, s, 1);
+		if (read_no < 0)
+		{
+			free(s);
+			return ;
+		}
+	}
+	printf("s:%s\n", line);
+}
+
 int	main(void)
 {
 	int			n;
+	struct termios	*io_conf;
 
+	//readlinetest();
+	io_conf = malloc(sizeof(struct termios));
+	tcgetattr(0, io_conf);
+	io_conf->c_lflag &= ~(ECHO|ICANON);  // disabled echo, canonical
+	io_conf->c_cc[VMIN] = 0;
+	io_conf->c_cc[VTIME] = 1;
+	tcsetattr(0 , TCSAFLUSH , io_conf);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, inthandler);//ctrl-C
 	new_prompt(0);

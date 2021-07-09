@@ -23,7 +23,8 @@ SRCNAME	= main.c \
 			builtin/env.c \
 			builtin/exit.c \
 			exec/redirect.c \
-			exec/command_path.c
+			exec/command_path.c \
+			history/history.c
 SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
 OBJS	= $(SRCS:.c=.o)
 LIBS	= -lft -L $(LIBFTDIR)

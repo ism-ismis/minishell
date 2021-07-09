@@ -12,8 +12,8 @@ typedef enum e_node_kind {
 
 typedef enum	e_command_kind
 {
-	ECHO = 1,
-	CD,
+	//ECHO = 1,
+	CD = 1,
 	PWD,
 	EXPORT,
 	UNSET,
