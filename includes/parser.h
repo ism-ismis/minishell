@@ -20,7 +20,7 @@ typedef enum	e_command_kind
 	ENV,
 	EXIT,
 	EXPANSION,
-	OTHER
+	OTHER = 9
 }		t_command_kind;
 
 typedef enum	e_redirect_kind
