@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 19:40:04 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/07/03 16:56:56 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/07/11 18:03:54 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,121 @@ void	add(char **line, char **stat, int len)
   	*line = tmp;
 }
 
-int	read_next_buf(int fd, char **line, char **stat)
+void	up_line(char **line, t_inter_list **ft_history)
+{
+	int	old_len;
+	int	new_len;
+
+	if (ft_history && *ft_history && (*ft_history)->pre)
+		*ft_history = (*ft_history)->pre;
+	if (*ft_history)
+	{
+		old_len = ft_strlen(*line);
+		new_len = ft_strlen((*ft_history)->line);
+		write(1, "\rminishell > ", 13);
+		write(1, (*ft_history)->line, new_len);
+		while (old_len > new_len)
+		{
+			write(1, " ", 1);
+			old_len--;
+		}
+		old_len = ft_strlen(*line);
+		while (old_len > new_len)
+		{
+			write(1, "\x1b[1D", 4);
+			old_len--;
+		}
+		*line = ft_strdup((*ft_history)->line);//need free
+	}
+}
+
+void	down_line(char **line, t_inter_list **ft_history)
+{
+	int	old_len;
+	int	new_len;
+
+	if (ft_history && *ft_history && (*ft_history)->next)
+		*ft_history = (*ft_history)->next;
+	if (*ft_history)
+	{
+		old_len = ft_strlen(*line);
+		new_len = ft_strlen((*ft_history)->line);
+		write(1, "\rminishell > ", 13);
+		write(1, (*ft_history)->line, new_len);
+		while (old_len > new_len)
+		{
+			write(1, " ", 1);
+			old_len--;
+		}
+		old_len = ft_strlen(*line);
+		while (old_len > new_len)
+		{
+			write(1, "\x1b[1D", 4);
+			old_len--;
+		}
+		*line = ft_strdup((*ft_history)->line);//need free
+	}
+}
+
+int	read_next_buf(int fd, char **line, char **stat, t_inter_list **ft_history)
 {
 	char	*s;
 	long	read_no;
+	char	bs;
 
-	s = malloc(BUFFER_SIZE + 1);
+	bs = 8;
+	s = malloc(2);
 	if (!s)
 		return (-3);
-	read_no = read(fd, s, BUFFER_SIZE);
-	if (read_no <= 0)
-		free(s);
-	if (read_no <= 0)
-		return (read_no);
+	*s = 0;
+	while (!*s)
+	{
+		read_no = read(fd, s, 1);
+		if (read_no < 0)
+		{
+			free(s);
+			return (read_no);
+		}
+		if ((*s == 8 || *s == 127) && **line)
+		{
+			(*line)[ft_strlen(*line)-1] = 0;
+			*line = ft_strdup(*line);//need free
+			write(1, "\rminishell > ", 13);
+			write(1, *line, ft_strlen(*line));
+			write(1, " \x1b[1D", 5);
+			free(*stat);
+			*stat = NULL;
+			return 1;
+		}
+		else if (s[0] == 0x1b)
+		{
+			read_no = read(fd, s, 1);
+			//if (read_no < 0)
+			if (*s != 0x5b)
+				continue;
+			read_no = read(fd, s, 1);
+			//if (read_no < 0)
+			if (*s == 0x41)
+			{
+				up_line(line, ft_history);
+				free(*stat);
+				*stat = NULL;
+				return (1);
+			}
+			if (*s == 0x42)
+			{
+				down_line(line, ft_history);
+				free(*stat);
+				*stat = NULL;
+				return (1);
+			}
+		}
+		else
+			write(1, s, 1);
+	}
 	if (*stat)
 		free(*stat);
-	*stat = ft_strldup(s, read_no);
+	*stat = ft_strldup(s, read_no);//exception
 	free(s);
 	if (*stat && *line)
 		return (1);
@@ -71,28 +170,14 @@ int	is_closed_correctly(char **line)
 	return (1);
 }
 
-int	get_next_buf(int fd, char **line, char **stat)
+int	get_next_buf(int fd, char **line, char **stat, t_inter_list **ft_history)
 {
 	char	*s;
 	int		j;
 
 	j = 0;
 	while (*stat && (*stat)[j] != '\0' && (*stat)[j] != '\n')
-	{
-		if ((*stat)[j] == 0x1b && (*stat)[j + 1] == 0x5b
-			&& ((*stat)[j + 2] == 0x41 || (*stat)[j + 2] == 0x42))
-		{
-			/*
-			if ((*stat)[j + 2] == 0x41)
-				up_line();
-			else if ((*stat)[j + 2] == 0x42)
-			   down_line(original_s);
-			j += 2;
-			*/
-		}
-		printf("%x ", (*stat)[j]);
 		j++;
-	}
 	add(line, stat, j);
 	if (*stat && (*stat)[j] == '\n' && is_closed_correctly(line))
 	{
@@ -103,21 +188,28 @@ int	get_next_buf(int fd, char **line, char **stat)
 			return (-2);
 		return (-3);
 	}
-	return (read_next_buf(fd, line, stat));
+	if (ft_history && *ft_history && !(*ft_history)->next)
+		//printf("[%s]\n", *line);
+		(*ft_history)->line = *line;
+	return (read_next_buf(fd, line, stat, ft_history));
 }
 
-int	minishell_get_next_line(int fd, char **line)
+int	minishell_get_next_line(int fd, char **line, t_inter_list *ft_history)
 {
 	int			j;
 	static char	*stat;
 
+	//ft_add_history(ft_history, NULL);
+	if (ft_history)
+		while (ft_history->next)
+			ft_history = ft_history->next;
 	if (line)
 		*line = ft_strdup("");
-	if (!line || !*line || BUFFER_SIZE <= 0 || INT_MAX - 1 <= BUFFER_SIZE)
+	if (!line || !*line)
 		return (-1);
 	while (1)
 	{
-		j = get_next_buf(fd, line, &stat);
+		j = get_next_buf(fd, line, &stat, &ft_history);
 		if (j == -2)
 			break ;
 		if (j <= 0)
@@ -130,5 +222,6 @@ int	minishell_get_next_line(int fd, char **line)
 			return (j);
 		}
 	}
+	//free()last history
 	return (1);
 }

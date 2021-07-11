@@ -6,7 +6,7 @@
 /*   By: yyamagum <yyamagum@student.42tokyo.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 00:58:32 by yyamagum          #+#    #+#             */
-/*   Updated: 2021/07/03 14:19:43 by yyamagum         ###   ########.fr       */
+/*   Updated: 2021/07/09 01:33:33 by yyamagum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@
 # include <limits.h>
 # include <sys/types.h>
 # include <signal.h>
-# define BUFFER_SIZE 10
+# include "../../includes/ft_history.h"
+//# define BUFFER_SIZE 10
 # define QUOTE 1
 # define DQUOTE 2
 
-int			minishell_get_next_line(int fd, char **line);
+int			minishell_get_next_line(int fd, char **line, t_inter_list *ft_history);
 char		*ft_strljoin(char const *s1, char const *s2, int len);
 char		*ft_strldup(const char *src, long len);
 char		*stradd(char *s1, char *s2);

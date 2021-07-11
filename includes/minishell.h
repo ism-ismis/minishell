@@ -7,6 +7,9 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <string.h>
+# include <sys/ioctl.h>
+# include <termios.h>
 # include "../srcs/libft/libft.h"
 # include "../srcs/printf/printf.h"
 # define GETCWD_SIZE 5
@@ -23,7 +26,6 @@ typedef struct s_str_list
 	struct s_str_list	*next;
 }			t_str_list;
 
-// int			minishell_get_next_line(int fd, char **line);
 t_str_list	*shell_split(char *line);
 int			is_separator(char c);
 t_str_list	*var_expansion(t_str_list *splited_lines, int *status);
