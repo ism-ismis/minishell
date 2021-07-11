@@ -24,9 +24,13 @@ void	ft_print_history(t_inter_list *ft_history)
 
 	printf("~~~~ft_history~~~~\n");
 	i = 1;
+	if (ft_history)
+		while (ft_history->pre)
+			ft_history = ft_history->pre;
 	while (ft_history)
 	{
-		printf("  %d  %s\n", i, ft_history->line);
+		if (ft_history->line)
+			printf("  %d  %s\n", i, ft_history->line);
 		ft_history = ft_history->next;
 		i++;
 	}

@@ -98,7 +98,8 @@ t_node	*get_tree(int status)
 		printf("exit\n");
 		exit(0);//n == 0 -> ctrl-D
 	}
-	ft_history = ft_add_history(ft_history, line);
+	if (line && *line)
+		ft_history = ft_add_history(ft_history, line);
 	if (!ft_history)
 		return (NULL);
 	//add_history(line);
